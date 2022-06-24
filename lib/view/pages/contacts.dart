@@ -1,4 +1,5 @@
 import 'package:cally/localization/localization.dart';
+import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
 import 'package:cally/model/appContacts.dart';
 import 'package:cally/theme/my_theme.dart';
@@ -216,7 +217,6 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                 controller: searchController,
                                 cursorWidth: 0.5,
                                 cursorColor: primaryPurple,
-                                // textAlign: TextAlign.center,
                                 textInputAction: TextInputAction.search,
                                 keyboardType: TextInputType.name,
                                 style: TextStyle(
@@ -508,6 +508,10 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
       ),
       subtitle: Text(
         nickname,
+        textDirection: TextDirection.ltr,
+        textAlign: CacheHelper.getData(key: 'languageCode') == 'ar'
+            ? TextAlign.end
+            : TextAlign.start,
         style: TextStyle(
           color: themeProvider.isDarkMode == true
               ? MyTheme.darkTheme.primaryColor
