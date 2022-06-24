@@ -69,9 +69,11 @@ class _SettingsState extends State<Settings> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        height: 150.0,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5.0, vertical: 5.0),
+                        // height: 150.0,
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             MaterialButton(
@@ -121,12 +123,12 @@ class _SettingsState extends State<Settings> {
                               endIndent: 30.0,
                             ),
                             MaterialButton(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20.0),
-                                  bottomRight: Radius.circular(20.0),
-                                ),
-                              ),
+                              // shape: const RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.only(
+                              //     bottomLeft: Radius.circular(20.0),
+                              //     bottomRight: Radius.circular(20.0),
+                              //   ),
+                              // ),
                               onPressed: () {
                                 setState(() {
                                   MyApp.setLocale(
@@ -153,6 +155,52 @@ class _SettingsState extends State<Settings> {
                                 ),
                                 leading: SvgPicture.asset(
                                   'assets/img/english_flag.svg',
+                                  alignment: Alignment.center,
+                                  height: 25.0,
+                                  width: 25.0,
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              color: themeProvider.isDarkMode == true
+                                  ? Colors.grey[600]
+                                  : MyTheme.lightTheme.primaryColor,
+                              indent: 30.0,
+                              endIndent: 30.0,
+                            ),
+                            MaterialButton(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20.0),
+                                  bottomRight: Radius.circular(20.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  MyApp.setLocale(
+                                      context, const Locale('en', 'US'));
+
+                                  languageCode = 'en';
+                                  countryCode = 'US';
+                                  CacheHelper.saveData(
+                                      key: 'languageCode', value: languageCode);
+                                  CacheHelper.saveData(
+                                      key: 'countryCode', value: countryCode);
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: ListTile(
+                                title: Text(
+                                  '${AppLocalization.of(context)?.getTranslatedValue('french')}',
+                                  style: TextStyle(
+                                    color: themeProvider.isDarkMode == true
+                                        ? MyTheme.darkTheme.primaryColor
+                                        : MyTheme.lightTheme.primaryColor,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                leading: SvgPicture.asset(
+                                  'assets/img/french_flag.svg',
                                   alignment: Alignment.center,
                                   height: 25.0,
                                   width: 25.0,
