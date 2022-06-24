@@ -27,6 +27,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                     fontSize: 28.0,
                   ),
                 ),
+                // nothing
                 SizedBox(
                   height: 10.0,
                 ),
