@@ -2,6 +2,7 @@
 
 import 'package:cally/localization/localization.dart';
 import 'package:cally/model/cacheHelper.dart';
+import 'package:cally/utils/constant.dart';
 import 'package:cally/view/pages/splash.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:flutter/material.dart';

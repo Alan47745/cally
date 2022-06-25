@@ -85,7 +85,7 @@ flutter:
     - assets/fonts/
     - lib/languages/ar.json
     - lib/languages/en.json
-    
+    - lib/languages/fr.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

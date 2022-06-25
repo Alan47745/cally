@@ -1,6 +1,7 @@
 import 'package:cally/localization/localization.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
 import 'package:cally/model/custom_page_route.dart';
+import 'package:cally/view/pages/contact_us.dart';
 import 'package:cally/view/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,7 +78,15 @@ class _DrawerPageState extends State<DrawerPage> {
             endIndent: 40.0,
           ),
           MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                CustomPageRoute(
+                  child: ContactUs(),
+                  direction: AxisDirection.left,
+                  duration: const Duration(milliseconds: 300),
+                ),
+              );
+            },
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('contactUs')}',

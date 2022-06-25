@@ -86,6 +86,7 @@ class _MainPageState extends State<MainPage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: primaryPurple,
         body: PersistentTabView(
           context,
           controller: _controller,

@@ -4,6 +4,7 @@ import 'package:cally/utils/constant.dart';
 import 'package:cally/view/pages/home.dart';
 import 'package:cally/view/pages/intro_1.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -34,7 +35,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
     WidgetsFlutterBinding.ensureInitialized();
+
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,

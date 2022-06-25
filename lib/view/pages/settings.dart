@@ -178,10 +178,10 @@ class _SettingsState extends State<Settings> {
                               onPressed: () {
                                 setState(() {
                                   MyApp.setLocale(
-                                      context, const Locale('en', 'US'));
+                                      context, const Locale('fr', 'FR'));
 
-                                  languageCode = 'en';
-                                  countryCode = 'US';
+                                  languageCode = 'fr';
+                                  countryCode = 'FR';
                                   CacheHelper.saveData(
                                       key: 'languageCode', value: languageCode);
                                   CacheHelper.saveData(
@@ -202,8 +202,8 @@ class _SettingsState extends State<Settings> {
                                 leading: SvgPicture.asset(
                                   'assets/img/french_flag.svg',
                                   alignment: Alignment.center,
-                                  height: 25.0,
-                                  width: 25.0,
+                                  height: 30.0,
+                                  width: 30.0,
                                 ),
                               ),
                             ),
