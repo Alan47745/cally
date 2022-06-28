@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cally/localization/localization.dart';
 import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
 import 'package:cally/model/appContacts.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/constant.dart';
+import 'package:cally/widget/showToast.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -13,6 +16,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum SearchOptions { open, close }
 
@@ -86,7 +90,20 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
   SearchOptions option = SearchOptions.close;
   FormOperationException? formOperationException;
 
-  // bool? isExpanded;
+  sendMassage({
+    required String number,
+    required String massage,
+  }) async {
+    String uri = 'sms:$number?body=$massage';
+    if (Platform.isAndroid) {
+      await launch(uri);
+    } else if (Platform.isIOS) {
+      await launch(uri);
+    } else {
+      showToast(text: 'Could not launch $uri');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isSearching = searchController.text.isNotEmpty;
@@ -332,7 +349,12 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                 FlutterPhoneDirectCaller.callNumber(
                                     '${contact.info.phones?.elementAt(0).value}');
                               },
-                              onMassagePressed: () {},
+                              onMassagePressed: () {
+                                sendMassage(
+                                    number:
+                                        '${contact.info.phones?.elementAt(0).value}',
+                                    massage: '');
+                              },
                               onTap: () {},
                               delete: () {
                                 showDialog<void>(
