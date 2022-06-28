@@ -2,7 +2,6 @@
 
 import 'package:cally/localization/localization.dart';
 import 'package:cally/model/cacheHelper.dart';
-import 'package:cally/utils/constant.dart';
 import 'package:cally/view/pages/splash.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +18,7 @@ void main() async {
   );
 
   await CacheHelper.init();
-  // CacheHelper.removeData(key: 'theme');
-  // CacheHelper.removeData(key: 'languageCode');
-  //   CacheHelper.removeData(key: 'countryCode');
+
   runApp(MyApp());
 }
 
@@ -43,12 +40,14 @@ class _MyAppState extends State<MyApp> {
   }
 
   Locale? _locale;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
       builder: (context, _) {
         final themeProvider = Provider.of<ThemeProvider>(context);
+
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: CacheHelper.getData(key: 'theme') == null
@@ -56,7 +55,7 @@ class _MyAppState extends State<MyApp> {
               : themeProvider.themeMode,
           darkTheme: MyTheme.darkTheme,
           theme: MyTheme.lightTheme,
-          home: Splash(),
+          home: const Splash(),
           locale: _locale,
           supportedLocales: [
             const Locale('en', 'US'),

@@ -1,10 +1,12 @@
 import 'package:cally/localization/localization.dart';
+import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
 import 'package:cally/model/custom_page_route.dart';
 import 'package:cally/view/pages/contact_us.dart';
 import 'package:cally/view/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class DrawerPage extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class DrawerPage extends StatefulWidget {
 class _DrawerPageState extends State<DrawerPage> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
@@ -38,9 +41,10 @@ class _DrawerPageState extends State<DrawerPage> {
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('profile')}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
+                  fontFamily: themeProvider.font,
                 ),
               ),
               leading: const Icon(
@@ -60,9 +64,10 @@ class _DrawerPageState extends State<DrawerPage> {
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('aboutUs')}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
+                  fontFamily: themeProvider.font,
                 ),
               ),
               leading: const Icon(
@@ -90,9 +95,10 @@ class _DrawerPageState extends State<DrawerPage> {
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('contactUs')}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
+                  fontFamily: themeProvider.font,
                 ),
               ),
               leading: const Icon(
@@ -112,9 +118,10 @@ class _DrawerPageState extends State<DrawerPage> {
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('privacyPolicy')}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
+                  fontFamily: themeProvider.font,
                 ),
               ),
               leading: const Icon(
@@ -134,9 +141,10 @@ class _DrawerPageState extends State<DrawerPage> {
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('rateUs')}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
+                  fontFamily: themeProvider.font,
                 ),
               ),
               leading: const Icon(
@@ -154,9 +162,10 @@ class _DrawerPageState extends State<DrawerPage> {
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('exit')}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
+                  fontFamily: themeProvider.font,
                 ),
               ),
               leading: const Icon(

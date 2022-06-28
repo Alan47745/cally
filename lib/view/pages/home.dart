@@ -1,4 +1,6 @@
+import 'package:cally/main.dart';
 import 'package:cally/model/cacheHelper.dart';
+import 'package:cally/model/language.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/view/pages/drawer.dart';
 import 'package:cally/view/pages/main_page.dart';
@@ -23,7 +25,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-
     return SafeArea(
       child: ZoomDrawer(
         mainScreenOverlayColor: Colors.grey.withOpacity(0.3),
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> {
             ? MyTheme.darkTheme.appBarTheme.backgroundColor!
             : MyTheme.lightTheme.appBarTheme.backgroundColor!,
         mainScreenTapClose: true,
-        isRtl: Home.isRtl,
+        isRtl: themeProvider.isDirectionRtl,
         controller: z,
         menuScreen: DrawerPage(),
         mainScreen: MainPage(),

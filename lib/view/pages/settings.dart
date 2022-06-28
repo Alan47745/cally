@@ -31,8 +31,8 @@ class _SettingsState extends State<Settings> {
             bottomLeft: Radius.circular(20.0),
           ),
         ),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'Helvetica New Bold',
+        titleTextStyle: TextStyle(
+          fontFamily: themeProvider.font,
           fontSize: 18.0,
         ),
         title: Row(
@@ -87,9 +87,12 @@ class _SettingsState extends State<Settings> {
                                 setState(() {
                                   MyApp.setLocale(
                                       context, const Locale('ar', 'SA'));
-
+                                  themeProvider.toggleDrawerDirection(true);
                                   languageCode = 'ar';
                                   countryCode = 'SA';
+                                  themeProvider.toggleFontFamily('Tajawal');
+                                  // CacheHelper.saveData(
+                                  //     key: 'font', value: 'Tajawal');
                                   CacheHelper.saveData(
                                       key: 'languageCode', value: languageCode);
                                   CacheHelper.saveData(
@@ -105,6 +108,7 @@ class _SettingsState extends State<Settings> {
                                         ? MyTheme.darkTheme.primaryColor
                                         : MyTheme.lightTheme.primaryColor,
                                     fontSize: 16.0,
+                                    fontFamily: themeProvider.font,
                                   ),
                                 ),
                                 leading: SvgPicture.asset(
@@ -123,19 +127,17 @@ class _SettingsState extends State<Settings> {
                               endIndent: 30.0,
                             ),
                             MaterialButton(
-                              // shape: const RoundedRectangleBorder(
-                              //   borderRadius: BorderRadius.only(
-                              //     bottomLeft: Radius.circular(20.0),
-                              //     bottomRight: Radius.circular(20.0),
-                              //   ),
-                              // ),
                               onPressed: () {
                                 setState(() {
                                   MyApp.setLocale(
                                       context, const Locale('en', 'US'));
-
+                                  themeProvider.toggleDrawerDirection(false);
                                   languageCode = 'en';
                                   countryCode = 'US';
+                                  themeProvider
+                                      .toggleFontFamily('Poppins Regular');
+                                  // CacheHelper.saveData(
+                                  //     key: 'font', value: 'Poppins Regular');
                                   CacheHelper.saveData(
                                       key: 'languageCode', value: languageCode);
                                   CacheHelper.saveData(
@@ -151,6 +153,7 @@ class _SettingsState extends State<Settings> {
                                         ? MyTheme.darkTheme.primaryColor
                                         : MyTheme.lightTheme.primaryColor,
                                     fontSize: 16.0,
+                                    fontFamily: themeProvider.font,
                                   ),
                                 ),
                                 leading: SvgPicture.asset(
@@ -179,9 +182,13 @@ class _SettingsState extends State<Settings> {
                                 setState(() {
                                   MyApp.setLocale(
                                       context, const Locale('fr', 'FR'));
-
+                                  themeProvider.toggleDrawerDirection(false);
                                   languageCode = 'fr';
                                   countryCode = 'FR';
+                                  themeProvider
+                                      .toggleFontFamily('Poppins Regular');
+                                  // CacheHelper.saveData(
+                                  //     key: 'font', value: 'Poppins Regular');
                                   CacheHelper.saveData(
                                       key: 'languageCode', value: languageCode);
                                   CacheHelper.saveData(
@@ -197,6 +204,7 @@ class _SettingsState extends State<Settings> {
                                         ? MyTheme.darkTheme.primaryColor
                                         : MyTheme.lightTheme.primaryColor,
                                     fontSize: 16.0,
+                                    fontFamily: themeProvider.font,
                                   ),
                                 ),
                                 leading: SvgPicture.asset(
@@ -222,6 +230,7 @@ class _SettingsState extends State<Settings> {
                         ? MyTheme.darkTheme.primaryColor
                         : MyTheme.lightTheme.primaryColor,
                     fontSize: 16.0,
+                    fontFamily: themeProvider.font,
                   ),
                 ),
                 leading: Icon(
@@ -279,6 +288,7 @@ class _SettingsState extends State<Settings> {
                                         ? MyTheme.darkTheme.primaryColor
                                         : MyTheme.lightTheme.primaryColor,
                                     fontSize: 16.0,
+                                    fontFamily: themeProvider.font,
                                   ),
                                 ),
                                 leading: const Icon(
@@ -315,6 +325,7 @@ class _SettingsState extends State<Settings> {
                                         ? MyTheme.darkTheme.primaryColor
                                         : MyTheme.lightTheme.primaryColor,
                                     fontSize: 16.0,
+                                    fontFamily: themeProvider.font,
                                   ),
                                 ),
                                 leading: Icon(
@@ -341,6 +352,7 @@ class _SettingsState extends State<Settings> {
                         ? MyTheme.darkTheme.primaryColor
                         : MyTheme.lightTheme.primaryColor,
                     fontSize: 16.0,
+                    fontFamily: themeProvider.font,
                   ),
                 ),
                 leading: Icon(

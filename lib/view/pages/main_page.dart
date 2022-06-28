@@ -33,57 +33,70 @@ class _MainPageState extends State<MainPage> {
     ];
   }
 
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        contentPadding: 0.0,
-        icon: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.0),
-          child: Icon(CustomIcons.recent),
-        ),
-        title: ('${AppLocalization.of(context)?.getTranslatedValue('recent')}'),
-        activeColorPrimary: primaryPurple,
-        inactiveColorPrimary: CupertinoColors.systemGrey4,
-        iconSize: 22.0,
-      ),
-      PersistentBottomNavBarItem(
-        contentPadding: 0.0,
-        icon: const Icon(CustomIcons.person),
-        title:
-            ('${AppLocalization.of(context)?.getTranslatedValue('contacts')}'),
-        activeColorPrimary: primaryPurple,
-        inactiveColorPrimary: CupertinoColors.systemGrey4,
-        iconSize: 22.0,
-      ),
-      PersistentBottomNavBarItem(
-        contentPadding: 0.0,
-        icon: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.0),
-          child: Icon(Icons.call_rounded),
-        ),
-        title: ('${AppLocalization.of(context)?.getTranslatedValue('call')}'),
-        activeColorPrimary: primaryPurple,
-        inactiveColorPrimary: CupertinoColors.systemGrey4,
-        iconSize: 25.0,
-      ),
-      PersistentBottomNavBarItem(
-        contentPadding: 0.0,
-        icon: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.0),
-          child: Icon(CustomIcons.settings),
-        ),
-        title:
-            ('${AppLocalization.of(context)?.getTranslatedValue('settings')}'),
-        activeColorPrimary: primaryPurple,
-        inactiveColorPrimary: CupertinoColors.systemGrey4,
-        iconSize: 22.0,
-      ),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    List<PersistentBottomNavBarItem> _navBarsItems() {
+      return [
+        PersistentBottomNavBarItem(
+          contentPadding: 0.0,
+          icon: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.0),
+            child: Icon(CustomIcons.recent),
+          ),
+          title:
+              ('${AppLocalization.of(context)?.getTranslatedValue('recent')}'),
+          textStyle: TextStyle(
+            fontFamily: themeProvider.font,
+          ),
+          activeColorPrimary: primaryPurple,
+          inactiveColorPrimary: CupertinoColors.systemGrey4,
+          iconSize: 22.0,
+        ),
+        PersistentBottomNavBarItem(
+          contentPadding: 5.0,
+          icon: const Icon(CustomIcons.person),
+          title:
+              ('${AppLocalization.of(context)?.getTranslatedValue('contacts')}'),
+          textStyle: TextStyle(
+            fontFamily: themeProvider.font,
+          ),
+          activeColorPrimary: primaryPurple,
+          inactiveColorPrimary: CupertinoColors.systemGrey4,
+          iconSize: 22.0,
+        ),
+        PersistentBottomNavBarItem(
+          contentPadding: 0.0,
+          icon: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.0),
+            child: Icon(Icons.call_rounded),
+          ),
+          title: ('${AppLocalization.of(context)?.getTranslatedValue('call')}'),
+          textStyle: TextStyle(
+            fontFamily: themeProvider.font,
+          ),
+          activeColorPrimary: primaryPurple,
+          inactiveColorPrimary: CupertinoColors.systemGrey4,
+          iconSize: 25.0,
+        ),
+        PersistentBottomNavBarItem(
+          contentPadding: 0.0,
+          icon: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.0),
+            child: Icon(CustomIcons.settings),
+          ),
+          title:
+              ('${AppLocalization.of(context)?.getTranslatedValue('settings')}'),
+          textStyle: TextStyle(
+            fontFamily: themeProvider.font,
+          ),
+          activeColorPrimary: primaryPurple,
+          inactiveColorPrimary: CupertinoColors.systemGrey4,
+          iconSize: 22.0,
+        ),
+      ];
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: primaryPurple,

@@ -8,6 +8,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -83,7 +84,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
   }
 
   SearchOptions option = SearchOptions.close;
+  FormOperationException? formOperationException;
 
+  // bool? isExpanded;
   @override
   Widget build(BuildContext context) {
     bool isSearching = searchController.text.isNotEmpty;
@@ -108,12 +111,13 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                     child: const Icon(Icons.person_add),
                     onTap: () => ContactsService.openContactForm(),
                   ),
-                  SpeedDialChild(
-                    child: const Icon(CustomIcons.search),
-                    onTap: () => setState(() {
-                      option = SearchOptions.open;
-                    }),
-                  ),
+                  if (contacts.isNotEmpty)
+                    SpeedDialChild(
+                      child: const Icon(CustomIcons.search),
+                      onTap: () => setState(() {
+                        option = SearchOptions.open;
+                      }),
+                    ),
                 ],
               ),
             ),
@@ -124,6 +128,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
               const Duration(milliseconds: 1500),
               () {
                 setState(() {
+                  // isExpanded = false;
                   contactsLoaded = true;
                 });
               },
@@ -152,17 +157,22 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                   ),
                 )
               : contacts.isEmpty
-                  ? Container(
-                      height: MediaQuery.of(context).size.height,
-                      alignment: Alignment.center,
-                      child: Text(
-                        "${AppLocalization.of(context)?.getTranslatedValue('noContacts')}",
-                        style: TextStyle(
-                          color: themeProvider.isDarkMode == true
-                              ? MyTheme.darkTheme.primaryColor
-                              : MyTheme.lightTheme.primaryColor,
+                  ? ListView(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height,
+                          alignment: Alignment.center,
+                          child: Text(
+                            "${AppLocalization.of(context)?.getTranslatedValue('noContacts')}",
+                            style: TextStyle(
+                              color: themeProvider.isDarkMode == true
+                                  ? MyTheme.darkTheme.primaryColor
+                                  : MyTheme.lightTheme.primaryColor,
+                              fontFamily: themeProvider.font,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     )
                   : ListView(
                       keyboardDismissBehavior:
@@ -222,7 +232,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                 style: TextStyle(
                                   height: 1.0,
                                   fontSize: 15.0,
-                                  fontFamily: 'Poppins Regular',
+                                  fontFamily: themeProvider.isDirectionRtl
+                                      ? 'Tajawal'
+                                      : 'Poppins Regular',
                                   color: themeProvider.isDarkMode == true
                                       ? MyTheme.darkTheme.primaryColor
                                       : MyTheme.lightTheme.primaryColor,
@@ -252,7 +264,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                       '${AppLocalization.of(context)?.getTranslatedValue('search')}',
                                   hintStyle: TextStyle(
                                     fontSize: 15.0,
-                                    fontFamily: 'Poppins Regular',
+                                    fontFamily: themeProvider.isDirectionRtl
+                                        ? 'Tajawal'
+                                        : 'Poppins Regular',
                                     color: themeProvider.isDarkMode == true
                                         ? MyTheme.darkTheme.primaryColor
                                         : MyTheme.lightTheme.primaryColor,
@@ -302,7 +316,11 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                           itemCount: isSearching == true
                               ? contactsFiltered.length
                               : contacts.length,
-                          separatorBuilder: (context, i) => const Divider(),
+                          separatorBuilder: (context, i) => const Divider(
+                            indent: 10.0,
+                            endIndent: 10.0,
+                            color: Colors.grey,
+                          ),
                           itemBuilder: (context, i) {
                             AppContact contact = isSearching == true
                                 ? contactsFiltered[i]
@@ -310,30 +328,45 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                             String customAvatar =
                                 '${contact.info.displayName?.trim().split(' ').map((l) => l[0]).take(1).join().replaceAll(RegExp('[^A-Za-z-ا-ي-آ-أ-إ]'), '').toUpperCase()}';
                             return ContactItem(
+                              onCallPressed: () {
+                                FlutterPhoneDirectCaller.callNumber(
+                                    '${contact.info.phones?.elementAt(0).value}');
+                              },
+                              onMassagePressed: () {},
+                              onTap: () {},
                               delete: () {
                                 showDialog<void>(
                                   context: context,
                                   barrierDismissible: false,
                                   builder: (BuildContext dialogContext) {
+                                    final themeProvider =
+                                        Provider.of<ThemeProvider>(
+                                            dialogContext);
                                     return AlertDialog(
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(20.0),
                                       ),
-                                      backgroundColor: primaryPurple,
+                                      backgroundColor:
+                                          themeProvider.isDarkMode == true
+                                              ? MyTheme.darkTheme.appBarTheme
+                                                  .backgroundColor
+                                              : MyTheme.lightTheme.appBarTheme
+                                                  .backgroundColor,
                                       actionsAlignment: MainAxisAlignment.end,
                                       alignment: Alignment.center,
-                                      titleTextStyle: const TextStyle(
+                                      titleTextStyle: TextStyle(
                                         color: Colors.white,
-                                        fontFamily: 'Helvetica New Bold',
+                                        fontFamily: themeProvider.font,
                                         fontSize: 20.0,
                                       ),
                                       title: Text(
                                         '${AppLocalization.of(context)?.getTranslatedValue('delete')}',
                                       ),
-                                      contentTextStyle: const TextStyle(
+                                      contentTextStyle: TextStyle(
                                         color: Colors.white,
-                                        fontFamily: 'Helvetica New Medium',
+                                        fontSize: 16.0,
+                                        fontFamily: themeProvider.font,
                                       ),
                                       content: Text(
                                           '${AppLocalization.of(context)?.getTranslatedValue('areYouSure')}\n${contact.info.displayName} ?'),
@@ -349,10 +382,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                           ),
                                           child: Text(
                                             '${AppLocalization.of(context)?.getTranslatedValue('delete')}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.yellow,
-                                              fontFamily:
-                                                  'Helvetica New Medium',
+                                              fontFamily: themeProvider.font,
                                             ),
                                           ),
                                           onPressed: () {
@@ -384,10 +416,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                           ),
                                           child: Text(
                                             '${AppLocalization.of(context)?.getTranslatedValue('cancel')}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.white,
-                                              fontFamily:
-                                                  'Helvetica New Medium',
+                                              fontFamily: themeProvider.font,
                                             ),
                                           ),
                                           onPressed: () {
@@ -488,101 +519,181 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
     required Widget avatar,
     required VoidCallback? delete,
     required VoidCallback? edit,
-
-    // VoidCallback? onLongPress,
-    // bool selected = false,
+    void Function()? onTap,
+    required void Function()? onCallPressed,
+    required void Function()? onMassagePressed,
+    // required Color color,
   }) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return ListTile(
-      // onLongPress: onLongPress,
-      // selected: selected,
-      title: Text(
-        name,
-        style: TextStyle(
-          fontFamily: 'Poppins Regular',
-          color: themeProvider.isDarkMode == true
-              ? MyTheme.darkTheme.primaryColor
-              : MyTheme.lightTheme.primaryColor,
-          fontSize: 18.0,
-        ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dividerColor: Colors.transparent,
       ),
-      subtitle: Text(
-        nickname,
-        textDirection: TextDirection.ltr,
-        textAlign: CacheHelper.getData(key: 'languageCode') == 'ar'
-            ? TextAlign.end
-            : TextAlign.start,
-        style: TextStyle(
-          color: themeProvider.isDarkMode == true
-              ? MyTheme.darkTheme.primaryColor
-              : MyTheme.lightTheme.primaryColor,
-          fontFamily: 'Poppins Regular',
-        ),
-      ),
-      leading: avatar,
-      trailing: PopupMenuButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        icon: Icon(
-          Icons.more_vert,
-          color: themeProvider.isDarkMode == true
-              ? MyTheme.darkTheme.primaryColor
-              : MyTheme.lightTheme.primaryColor,
-        ),
-        color: themeProvider.isDarkMode == true
-            ? MyTheme.darkTheme.popupMenuTheme.color
-            : MyTheme.lightTheme.popupMenuTheme.color,
-        itemBuilder: (context) {
-          return <PopupMenuEntry>[
-            PopupMenuItem(
-              onTap: edit,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: ExpansionTile(
+            title: ListTile(
+              title: Text(
+                name,
+                style: TextStyle(
+                  fontFamily: themeProvider.font,
+                  color: themeProvider.isDarkMode == true
+                      ? MyTheme.darkTheme.primaryColor
+                      : MyTheme.lightTheme.primaryColor,
+                  fontSize: 18.0,
+                ),
+              ),
+              subtitle: Text(
+                nickname,
+                textDirection: TextDirection.ltr,
+                textAlign: CacheHelper.getData(key: 'languageCode') == 'ar'
+                    ? TextAlign.end
+                    : TextAlign.start,
+                style: TextStyle(
+                  color: themeProvider.isDarkMode == true
+                      ? MyTheme.darkTheme.primaryColor
+                      : MyTheme.lightTheme.primaryColor,
+                  fontFamily: 'Poppins Regular',
+                ),
+              ),
+              leading: avatar,
+              contentPadding: EdgeInsets.zero,
+              trailing: PopupMenuButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                icon: Icon(
+                  Icons.more_vert,
+                  color: themeProvider.isDarkMode == true
+                      ? MyTheme.darkTheme.primaryColor
+                      : MyTheme.lightTheme.primaryColor,
+                ),
+                color: themeProvider.isDarkMode == true
+                    ? MyTheme.darkTheme.popupMenuTheme.color
+                    : MyTheme.lightTheme.popupMenuTheme.color,
+                itemBuilder: (context) {
+                  return <PopupMenuEntry>[
+                    PopupMenuItem(
+                      onTap: edit,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${AppLocalization.of(context)?.getTranslatedValue('edit')}',
+                            style: TextStyle(
+                              fontFamily: themeProvider.font,
+                              color: themeProvider.isDarkMode == true
+                                  ? MyTheme.darkTheme.primaryColor
+                                  : MyTheme.lightTheme.primaryColor,
+                            ),
+                          ),
+                          Icon(
+                            Icons.edit,
+                            color: themeProvider.isDarkMode == true
+                                ? MyTheme.darkTheme.primaryColor
+                                : MyTheme.lightTheme.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      onTap: delete,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${AppLocalization.of(context)?.getTranslatedValue('delete')}',
+                            style: TextStyle(
+                              fontFamily: themeProvider.font,
+                              color: themeProvider.isDarkMode == true
+                                  ? MyTheme.darkTheme.primaryColor
+                                  : MyTheme.lightTheme.primaryColor,
+                            ),
+                          ),
+                          Icon(
+                            Icons.delete_forever,
+                            color: themeProvider.isDarkMode == true
+                                ? MyTheme.darkTheme.primaryColor
+                                : MyTheme.lightTheme.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ];
+                },
+              ),
+            ),
+            onExpansionChanged: (bool isExpand) {
+              setState(() {
+                // isExpanded = isExpand;
+              });
+            },
+            childrenPadding: EdgeInsets.zero,
+            tilePadding: EdgeInsets.zero,
+            iconColor: Colors.transparent,
+            backgroundColor: themeProvider.isDarkMode == true
+                ? MyTheme.darkTheme.cardColor
+                : MyTheme.lightTheme.cardColor,
+            collapsedIconColor: Colors.transparent,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '${AppLocalization.of(context)?.getTranslatedValue('edit')}',
-                    style: TextStyle(
-                      fontFamily: 'Poppins Regular',
-                      color: themeProvider.isDarkMode == true
-                          ? MyTheme.darkTheme.primaryColor
-                          : MyTheme.lightTheme.primaryColor,
+                  Expanded(
+                    child: SizedBox(
+                      height: 50.0,
+                      child: MaterialButton(
+                        // shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.only(
+                        //   bottomLeft: Radius.circular(5.0),
+                        //   bottomRight: Radius.circular(5.0),
+                        // )),
+                        elevation: 0.0,
+                        highlightElevation: 0.0,
+                        hoverElevation: 0.0,
+                        focusElevation: 0.0,
+                        disabledElevation: 0.0,
+                        onPressed: onCallPressed,
+                        padding: EdgeInsets.zero,
+                        color: CupertinoColors.systemGreen,
+                        child: Icon(
+                          Icons.call,
+                          color: Colors.yellow,
+                        ),
+                      ),
                     ),
                   ),
-                  Icon(
-                    Icons.edit,
-                    color: themeProvider.isDarkMode == true
-                        ? MyTheme.darkTheme.primaryColor
-                        : MyTheme.lightTheme.primaryColor,
+                  Expanded(
+                    child: SizedBox(
+                      height: 50.0,
+                      child: MaterialButton(
+                        // shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.only(
+                        //   bottomLeft: Radius.circular(5.0),
+                        //   bottomRight: Radius.circular(5.0),
+                        // )),
+                        elevation: 0.0,
+                        highlightElevation: 0.0,
+                        hoverElevation: 0.0,
+                        focusElevation: 0.0,
+                        disabledElevation: 0.0,
+                        onPressed: onMassagePressed,
+                        padding: EdgeInsets.zero,
+                        color: CupertinoColors.systemBlue,
+                        child: Icon(
+                          Icons.chat,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-            PopupMenuItem(
-              onTap: delete,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${AppLocalization.of(context)?.getTranslatedValue('delete')}',
-                    style: TextStyle(
-                      fontFamily: 'Poppins Regular',
-                      color: themeProvider.isDarkMode == true
-                          ? MyTheme.darkTheme.primaryColor
-                          : MyTheme.lightTheme.primaryColor,
-                    ),
-                  ),
-                  Icon(
-                    Icons.delete_forever,
-                    color: themeProvider.isDarkMode == true
-                        ? MyTheme.darkTheme.primaryColor
-                        : MyTheme.lightTheme.primaryColor,
-                  ),
-                ],
-              ),
-            ),
-          ];
-        },
+            ],
+          ),
+        ),
       ),
     );
   }

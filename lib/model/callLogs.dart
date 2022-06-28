@@ -4,7 +4,7 @@ import 'package:cally/theme/my_theme.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:call_log/call_log.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 
 class CallLogs {
@@ -69,39 +69,54 @@ class CallLogs {
   }
 
   String formatDate(DateTime dt) {
-    return DateFormat('d-MMM-y  H:m:s').format(dt);
+    return intl.DateFormat('d-MMM-y  H:m:s').format(dt);
   }
 
   getTitle(CallLogEntry entry, BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     if (entry.name == null) {
-      return Text(
-        "${entry.number}",
-        style: TextStyle(
-          fontSize: 16.0,
-          fontFamily: 'Poppins Regular',
-          color: themeProvider.isDarkMode == true
-              ? MyTheme.darkTheme.primaryColor
-              : MyTheme.lightTheme.primaryColor,
-        ),
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "${entry.number}",
+            textDirection: TextDirection.ltr,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontFamily: 'Poppins Regular',
+              color: themeProvider.isDarkMode == true
+                  ? MyTheme.darkTheme.primaryColor
+                  : MyTheme.lightTheme.primaryColor,
+            ),
+          ),
+        ],
       );
     }
     if (entry.name!.isEmpty) {
-      return Text(
-        "${entry.number}",
-        style: TextStyle(
-          fontSize: 16.0,
-          fontFamily: 'Poppins Regular',
-          color: themeProvider.isDarkMode == true
-              ? MyTheme.darkTheme.primaryColor
-              : MyTheme.lightTheme.primaryColor,
-        ),
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "${entry.number}",
+            textDirection: TextDirection.ltr,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontFamily: 'Poppins Regular',
+              color: themeProvider.isDarkMode == true
+                  ? MyTheme.darkTheme.primaryColor
+                  : MyTheme.lightTheme.primaryColor,
+            ),
+          ),
+        ],
       );
     } else {
       return Text(
         "${entry.name}",
         style: TextStyle(
           fontSize: 16.0,
+          // fontFamily: entry.name!.contains(RegExp('[^A-Za-z]'))
+          //     ? 'Poppins Regular'
+          //     : 'Tajawal',
           fontFamily: 'Poppins Regular',
           color: themeProvider.isDarkMode == true
               ? MyTheme.darkTheme.primaryColor

@@ -2,6 +2,7 @@
 
 import 'package:call_log/call_log.dart';
 import 'package:cally/localization/localization.dart';
+import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/model/callLogs.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/constant.dart';
@@ -35,6 +36,7 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
   }
 
   bool isEmpty = false;
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +45,9 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
       setState(() {
         logs = cl.getCallLogs().then((value) {
           if (value.isEmpty) {
-            isEmpty = true;
+            setState(() {
+              isEmpty = true;
+            });
           }
           return value;
         });
@@ -94,8 +98,8 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
         title: Text(
           "${AppLocalization.of(context)?.getTranslatedValue('recentTitle')}",
         ),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'Helvetica New Bold',
+        titleTextStyle: TextStyle(
+          fontFamily: themeProvider.font,
           fontSize: 16.0,
         ),
         leading: Builder(builder: (context) {
@@ -127,6 +131,9 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
               ? Center(
                   child: Text(
                     "${AppLocalization.of(context)?.getTranslatedValue('noCall')}",
+                    style: TextStyle(
+                      fontFamily: themeProvider.font,
+                    ),
                   ),
                 )
               : Column(

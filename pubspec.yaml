@@ -47,6 +47,7 @@ dependencies:
   contacts_service:
   flutter_speed_dial:
   provider:
+  url_launcher:
 
 
 #  bloc: ^7.2.1
@@ -120,6 +121,10 @@ flutter:
     - family: Poppins Regular
       fonts:
         - asset: assets/fonts/PoppinsRegular.ttf
+
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/TajawalRegular.ttf
 
 
   # For details regarding fonts from package dependencies,

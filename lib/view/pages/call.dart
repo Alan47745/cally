@@ -1,4 +1,5 @@
 import 'package:cally/localization/localization.dart';
+import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/constant.dart';
 import 'package:cally/widget/showToast.dart';
@@ -31,6 +32,7 @@ class _CallState extends State<Call> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: TextFormField(
+              textDirection: TextDirection.ltr,
               cursorColor: primaryPurple,
               cursorWidth: 1.0,
               cursorHeight: 40.0,
@@ -160,16 +162,26 @@ class _CallState extends State<Call> {
                             foregroundColor: Colors.white,
                             onPressed: () async {
                               if (display.isNotEmpty) {
+                                CacheHelper.saveData(
+                                    key: 'recentNumber', value: display);
+                                FlutterPhoneDirectCaller.callNumber(display);
                                 setState(() {
                                   display = display.substring(
                                       0, display.length - display.length);
                                 });
-                                FlutterPhoneDirectCaller.callNumber(display);
                               } else {
-                                showToast(
-                                  text:
-                                      '${AppLocalization.of(context)?.getTranslatedValue('enterPhoneNum')}',
-                                );
+                                if (CacheHelper.getData(key: 'recentNumber') !=
+                                    null) {
+                                  setState(() {
+                                    display = CacheHelper.getData(
+                                        key: 'recentNumber');
+                                  });
+                                } else {
+                                  showToast(
+                                    text:
+                                        '${AppLocalization.of(context)?.getTranslatedValue('enterPhoneNum')}',
+                                  );
+                                }
                               }
                             },
                             child: const Icon(Icons.call_rounded),
@@ -261,6 +273,7 @@ class _CallState extends State<Call> {
               number,
               textAlign: TextAlign.center,
               style: const TextStyle(
+                fontFamily: 'Helvetica New Medium',
                 fontSize: 28.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -269,6 +282,7 @@ class _CallState extends State<Call> {
               Text(
                 capital,
                 style: const TextStyle(
+                  fontFamily: 'Helvetica New Medium',
                   fontSize: 10.0,
                   fontWeight: FontWeight.bold,
                 ),

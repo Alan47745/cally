@@ -4,9 +4,10 @@ import 'package:cally/utils/constant.dart';
 import 'package:cally/view/pages/home.dart';
 import 'package:cally/view/pages/intro_1.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Splash extends StatefulWidget {
+  const Splash({Key? key}) : super(key: key);
+
   @override
   _SplashState createState() => _SplashState();
 }
@@ -23,7 +24,6 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Future<void> moveWidget() async {
     var introFinished = await CacheHelper.getData(key: 'introFinished');
-    print(introFinished);
 
     if (introFinished == true) {
       _widget = Home();
@@ -105,6 +105,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: animation1?.value,
+                    fontFamily: 'Poppins Regular',
                   ),
                 ),
               ),

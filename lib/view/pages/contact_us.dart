@@ -1,9 +1,11 @@
 import 'package:cally/localization/localization.dart';
+import 'package:cally/main.dart';
 import 'package:cally/model/custom_page_route.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/constant.dart';
 import 'package:cally/view/pages/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:provider/provider.dart';
 
 class ContactUs extends StatefulWidget {
@@ -38,8 +40,8 @@ class _ContactUsState extends State<ContactUs> {
         title: Text(
           "${AppLocalization.of(context)?.getTranslatedValue('contactUs')}",
         ),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'Helvetica New Bold',
+        titleTextStyle: TextStyle(
+          fontFamily: themeProvider.font,
           fontSize: 16.0,
         ),
         elevation: 0.0,
@@ -57,7 +59,7 @@ class _ContactUsState extends State<ContactUs> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(12.0),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Container(
@@ -65,7 +67,7 @@ class _ContactUsState extends State<ContactUs> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: themeProvider.isDarkMode == true
-                  ? MyTheme.darkTheme.cardColor
+                  ? MyTheme.darkTheme.cardColor.withOpacity(0.3)
                   : MyTheme.lightTheme.cardColor,
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: const [
@@ -83,7 +85,9 @@ class _ContactUsState extends State<ContactUs> {
                 contactItem(
                   title: '+963 981 573 299',
                   icon: Icons.call,
-                  onTap: () {},
+                  onTap: () {
+                    FlutterPhoneDirectCaller.callNumber('+963981573299');
+                  },
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(10.0),
                     topLeft: Radius.circular(10.0),
@@ -144,11 +148,16 @@ class _ContactUsState extends State<ContactUs> {
         borderRadius: borderRadius!,
       ),
       color: themeProvider.isDarkMode == true
-          ? MyTheme.darkTheme.cardColor
+          ? MyTheme.darkTheme.cardColor.withOpacity(0.3)
           : MyTheme.lightTheme.cardColor,
       child: ListTile(
         // onTap: onTap,
-        title: Text(title),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontFamily: 'Poppins Regular',
+          ),
+        ),
         leading: Icon(icon),
       ),
     );
