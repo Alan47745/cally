@@ -45,6 +45,7 @@ class _SignUserState extends State<SignUser> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   fontSize: 35.0,
+                  fontFamily: 'Poppins Regular',
                 ),
               ),
             Container(
@@ -155,6 +156,7 @@ class _SignUserState extends State<SignUser> {
                                       : 'Your Gender',
                               style: const TextStyle(
                                 fontSize: 14.0,
+                                fontFamily: 'Poppins Regular',
                               ),
                             ),
                             const SizedBox(
@@ -184,6 +186,7 @@ class _SignUserState extends State<SignUser> {
                                   'Male',
                                   style: TextStyle(
                                     fontSize: 14.0,
+                                    fontFamily: 'Poppins Regular',
                                   ),
                                 ),
                                 Icon(
@@ -205,6 +208,7 @@ class _SignUserState extends State<SignUser> {
                                   'Female',
                                   style: TextStyle(
                                     fontSize: 14.0,
+                                    fontFamily: 'Poppins Regular',
                                   ),
                                 ),
                                 Icon(
@@ -280,6 +284,7 @@ class _SignUserState extends State<SignUser> {
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins Regular',
                         ),
                       ),
                     ),

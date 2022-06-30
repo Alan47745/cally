@@ -25,6 +25,7 @@ Widget CustomTextFormField({
       style: const TextStyle(
         height: 1.0,
         fontSize: 15.0,
+        fontFamily: 'Poppins Regular',
       ),
       decoration: InputDecoration(
         filled: filled,
@@ -36,6 +37,7 @@ Widget CustomTextFormField({
         hintText: hintText,
         hintStyle: const TextStyle(
           fontSize: 15.0,
+          fontFamily: 'Poppins Regular',
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),

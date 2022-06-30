@@ -25,6 +25,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                   'Personal Privacy',
                   style: TextStyle(
                     fontSize: 28.0,
+                    fontFamily: 'Poppins Regular',
                   ),
                 ),
                 // nothing
@@ -37,6 +38,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14.0,
+                    fontFamily: 'Poppins Regular',
                   ),
                 ),
               ],
@@ -67,6 +69,7 @@ class _ThirdIntroState extends State<ThirdIntro> {
                   'Manage Profile',
                   style: TextStyle(
                     fontSize: 14.0,
+                    fontFamily: 'Poppins Regular',
                   ),
                 ),
               ),

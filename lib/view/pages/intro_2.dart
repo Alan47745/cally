@@ -25,6 +25,7 @@ class _SecondIntroState extends State<SecondIntro> {
                   'Hide The Identity',
                   style: TextStyle(
                     fontSize: 28.0,
+                    fontFamily: 'Poppins Regular',
                   ),
                 ),
                 SizedBox(
@@ -36,6 +37,7 @@ class _SecondIntroState extends State<SecondIntro> {
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14.0,
+                    fontFamily: 'Poppins Regular',
                   ),
                 ),
               ],
@@ -65,6 +67,7 @@ class _SecondIntroState extends State<SecondIntro> {
                   'Next',
                   style: TextStyle(
                     fontSize: 14.0,
+                    fontFamily: 'Poppins Regular',
                   ),
                 ),
               ),

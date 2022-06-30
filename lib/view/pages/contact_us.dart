@@ -1,12 +1,13 @@
 import 'package:cally/localization/localization.dart';
-import 'package:cally/main.dart';
 import 'package:cally/model/custom_page_route.dart';
 import 'package:cally/theme/my_theme.dart';
-import 'package:cally/utils/constant.dart';
 import 'package:cally/view/pages/home.dart';
+import 'package:cally/widget/showToast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ContactUs extends StatefulWidget {
   @override
@@ -24,6 +25,39 @@ class _ContactUsState extends State<ContactUs> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> sendEmail({
+    required String email,
+  }) async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: email,
+      query: '',
+    );
+
+    var url = params.toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      showToast(text: 'Could not launch $url');
+    }
+  }
+
+  Future<void> socialMediaLauncher({
+    required String host,
+    required String path,
+  }) async {
+    final Uri params = Uri(
+      scheme: 'https',
+      host: host,
+      path: path,
+    );
+    if (await canLaunchUrl(params)) {
+      await launchUrl(params);
+    } else {
+      showToast(text: 'Something went wrong');
+    }
   }
 
   @override
@@ -88,7 +122,7 @@ class _ContactUsState extends State<ContactUs> {
                   onTap: () {
                     FlutterPhoneDirectCaller.callNumber('+963981573299');
                   },
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(10.0),
                     topLeft: Radius.circular(10.0),
                   ),
@@ -96,7 +130,11 @@ class _ContactUsState extends State<ContactUs> {
                 contactItem(
                   title: 'alanalhasan0@gmail.com',
                   icon: Icons.email,
-                  onTap: () {},
+                  onTap: () {
+                    sendEmail(
+                      email: 'alanalhasan0@gmail.com',
+                    );
+                  },
                 ),
                 contactItem(
                   title: 'Syria, Tartous, Safita',
@@ -111,18 +149,55 @@ class _ContactUsState extends State<ContactUs> {
                 contactItem(
                   title: 'Alan M Alhasan',
                   icon: Icons.facebook,
-                  onTap: () {},
+                  onTap: () {
+                    String facebookApp = "fb://profile/100010619418275";
+                    canLaunchUrlString(facebookApp).then((canLaunch) {
+                      if (canLaunch) {
+                        launchUrlString(facebookApp);
+                      } else {
+                        // Do something else
+                      }
+                    });
+                  },
                 ),
                 contactItem(
                   title: '@alanalhasan',
                   icon: Icons.camera,
-                  onTap: () {},
+                  onTap: () async {
+                    const nativeUrl =
+                        "instagram://user?alanalhasan=severities_app";
+                    const webUrl = "https://www.instagram.com/severinas_app/";
+                    if (await canLaunch(nativeUrl)) {
+                      await launch(nativeUrl);
+                    } else if (await canLaunch(webUrl)) {
+                      await launch(webUrl);
+                    } else {
+                      print("can't open Instagram");
+                    }
+
+                    // var url = 'https://www.instagram.com/alanalhasan';
+                    // if (await canLaunch(url)) {
+                    //   await launch(
+                    //     url,
+                    //     universalLinksOnly: true,
+                    //     forceSafariVC: true,
+                    //     forceWebView: true,
+                    //   );
+                    // } else {
+                    //   throw 'There was a problem to open the url: $url';
+                    // }
+                  },
                 ),
                 contactItem(
                   title: '@alan_m_alhasan',
                   icon: Icons.flutter_dash,
-                  onTap: () {},
-                  borderRadius: BorderRadius.only(
+                  onTap: () {
+                    socialMediaLauncher(
+                      host: 'twitter.com',
+                      path: 'alan_m_alhasan',
+                    );
+                  },
+                  borderRadius: const BorderRadius.only(
                     bottomRight: Radius.circular(10.0),
                     bottomLeft: Radius.circular(10.0),
                   ),
@@ -154,7 +229,7 @@ class _ContactUsState extends State<ContactUs> {
         // onTap: onTap,
         title: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Poppins Regular',
           ),
         ),

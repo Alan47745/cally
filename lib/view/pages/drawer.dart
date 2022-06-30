@@ -1,4 +1,5 @@
 import 'package:cally/localization/localization.dart';
+import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
 import 'package:cally/model/custom_page_route.dart';
@@ -6,6 +7,7 @@ import 'package:cally/view/pages/contact_us.dart';
 import 'package:cally/view/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class DrawerPage extends StatefulWidget {

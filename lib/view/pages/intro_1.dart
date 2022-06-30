@@ -43,20 +43,22 @@ class _FirstIntroState extends State<FirstIntro> {
               Column(
                 children: [
                   Text(
-                    "${AppLocalization.of(context)?.getTranslatedValue('callAndReceive')}",
+                    "Call And Receive",
                     style: const TextStyle(
                       fontSize: 28.0,
+                      fontFamily: 'Poppins Regular',
                     ),
                   ),
                   const SizedBox(
                     height: 10.0,
                   ),
                   Text(
-                    "${AppLocalization.of(context)?.getTranslatedValue('callAndReceiveText')}",
+                    "Call and Receive to your personal\nfriends/neighbors anonymously",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14.0,
+                      fontFamily: 'Poppins Regular',
                     ),
                   ),
                 ],
@@ -82,10 +84,11 @@ class _FirstIntroState extends State<FirstIntro> {
                       ),
                     ),
                   ),
-                  child: Text(
-                    "${AppLocalization.of(context)?.getTranslatedValue('start')}",
+                  child: const Text(
+                    'Start',
                     style: const TextStyle(
                       fontSize: 14.0,
+                      fontFamily: 'Poppins Regular',
                     ),
                   ),
                 ),

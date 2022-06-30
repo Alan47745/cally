@@ -12,6 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 class Recent extends StatefulWidget {
   @override
@@ -103,13 +104,19 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
           fontSize: 16.0,
         ),
         leading: Builder(builder: (context) {
-          return IconButton(
-            onPressed: () {
-              ZoomDrawer.of(context)?.open();
-            },
-            icon: SvgPicture.asset(
-              'assets/img/drawer.svg',
-              color: Colors.white,
+          return Transform(
+            alignment: Alignment.center,
+            transform: CacheHelper.getData(key: 'languageCode') == 'ar'
+                ? Matrix4.rotationY(math.pi)
+                : Matrix4.rotationY(0),
+            child: IconButton(
+              onPressed: () {
+                ZoomDrawer.of(context)?.open();
+              },
+              icon: SvgPicture.asset(
+                'assets/img/drawer.svg',
+                color: Colors.white,
+              ),
             ),
           );
         }),

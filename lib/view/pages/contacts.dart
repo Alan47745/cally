@@ -38,17 +38,13 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
     getPermissions();
-    searchController.addListener(() {
-      filterContacts();
-    });
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   Future<void> getPermissions() async {
@@ -71,12 +67,6 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
     }
   }
 
-  String flattenPhoneNumber(String phoneStr) {
-    return phoneStr.replaceAllMapped(RegExp(r'^(\+)|\D'), (Match m) {
-      return m[0] == "+" ? "+" : "";
-    });
-  }
-
   Future<void> getAllContacts() async {
     List<AppContact> _contacts =
         (await ContactsService.getContacts()).map((contact) {
@@ -88,7 +78,6 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
   }
 
   SearchOptions option = SearchOptions.close;
-  FormOperationException? formOperationException;
 
   sendMassage({
     required String number,
@@ -112,32 +101,34 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
     return Scaffold(
       floatingActionButton: option == SearchOptions.open
           ? const SizedBox()
-          : Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SpeedDial(
-                animatedIcon: AnimatedIcons.menu_close,
-                backgroundColor: themeProvider.isDarkMode == true
-                    ? MyTheme.darkTheme.appBarTheme.backgroundColor
-                    : MyTheme.lightTheme.appBarTheme.backgroundColor,
-                spacing: 20.0,
-                foregroundColor: Colors.white,
-                overlayColor: Colors.black,
-                overlayOpacity: 0.4,
-                children: [
-                  SpeedDialChild(
-                    child: const Icon(Icons.person_add),
-                    onTap: () => ContactsService.openContactForm(),
+          : contactsLoaded
+              ? const SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SpeedDial(
+                    animatedIcon: AnimatedIcons.menu_close,
+                    backgroundColor: themeProvider.isDarkMode == true
+                        ? MyTheme.darkTheme.appBarTheme.backgroundColor
+                        : MyTheme.lightTheme.appBarTheme.backgroundColor,
+                    spacing: 20.0,
+                    foregroundColor: Colors.white,
+                    overlayColor: Colors.black,
+                    overlayOpacity: 0.4,
+                    children: [
+                      SpeedDialChild(
+                        child: const Icon(Icons.person_add),
+                        onTap: () => ContactsService.openContactForm(),
+                      ),
+                      if (contacts.isNotEmpty)
+                        SpeedDialChild(
+                          child: const Icon(CustomIcons.search),
+                          onTap: () => setState(() {
+                            option = SearchOptions.open;
+                          }),
+                        ),
+                    ],
                   ),
-                  if (contacts.isNotEmpty)
-                    SpeedDialChild(
-                      child: const Icon(CustomIcons.search),
-                      onTap: () => setState(() {
-                        option = SearchOptions.open;
-                      }),
-                    ),
-                ],
-              ),
-            ),
+                ),
       body: RefreshIndicator(
         onRefresh: () async {
           if (option == SearchOptions.close) {
@@ -198,32 +189,46 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                         AnimatedCrossFade(
                           firstChild: Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: MediaQuery.of(context).size.height * 0.30,
-                              decoration: BoxDecoration(
-                                color: themeProvider.isDarkMode == true
-                                    ? MyTheme.darkTheme.cardColor
-                                    : MyTheme.lightTheme.cardColor,
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(30.0),
-                                  bottomRight: Radius.circular(30.0),
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 8.0,
-                                    spreadRadius: 2.0,
-                                    offset: Offset(0.0, 3.0),
+                            child: Stack(
+                              alignment: Alignment.bottomLeft,
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.30,
+                                  decoration: BoxDecoration(
+                                    color: themeProvider.isDarkMode == true
+                                        ? MyTheme.darkTheme.cardColor
+                                        : MyTheme.lightTheme.cardColor,
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(30.0),
+                                      bottomRight: Radius.circular(30.0),
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 8.0,
+                                        spreadRadius: 2.0,
+                                        offset: Offset(0.0, 3.0),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              child: SvgPicture.asset(
-                                'assets/img/Group 2666-min.svg',
-                                height: (MediaQuery.of(context).size.height *
-                                        0.30) -
-                                    30.0,
-                              ),
+                                  child: SvgPicture.asset(
+                                    'assets/img/Group 2666-min.svg',
+                                    height:
+                                        (MediaQuery.of(context).size.height *
+                                                0.30) -
+                                            30.0,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 15.0,
+                                    bottom: 15.0,
+                                  ),
+                                  child: Text('${contacts.length} Contacts'),
+                                ),
+                              ],
                             ),
                           ),
                           secondChild: Padding(
@@ -516,16 +521,16 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
     if (searchController.text.isNotEmpty) {
       _contacts.retainWhere((contact) {
         String searchTerm = searchController.text.toLowerCase();
-        String searchTermFlatten = flattenPhoneNumber(searchTerm);
+        // String searchTermFlatten = flattenPhoneNumber(searchTerm);
         String contactName = "${contact.info.displayName?.toLowerCase()}";
         bool nameMatches = contactName.contains(searchTerm);
         if (nameMatches == true) {
           return true;
         }
 
-        if (searchTermFlatten.isEmpty) {
-          return false;
-        }
+        // if (searchTermFlatten.isEmpty) {
+        //   return false;
+        // }
 
         return true;
       });
@@ -667,11 +672,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                     child: SizedBox(
                       height: 50.0,
                       child: MaterialButton(
-                        // shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.only(
-                        //   bottomLeft: Radius.circular(5.0),
-                        //   bottomRight: Radius.circular(5.0),
-                        // )),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
                         elevation: 0.0,
                         highlightElevation: 0.0,
                         hoverElevation: 0.0,
@@ -691,11 +694,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                     child: SizedBox(
                       height: 50.0,
                       child: MaterialButton(
-                        // shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.only(
-                        //   bottomLeft: Radius.circular(5.0),
-                        //   bottomRight: Radius.circular(5.0),
-                        // )),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
                         elevation: 0.0,
                         highlightElevation: 0.0,
                         hoverElevation: 0.0,

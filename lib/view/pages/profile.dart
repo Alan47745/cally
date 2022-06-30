@@ -89,6 +89,7 @@ class _ProfileState extends State<Profile> {
                       CacheHelper.replaceData(
                           key: 'phone', value: phoneCon.text);
                       CacheHelper.replaceData(key: 'gender', value: "$gender");
+
                       setState(() {
                         state = ScreenState.loading;
                       });
@@ -278,9 +279,9 @@ class _ProfileState extends State<Profile> {
                                             : choice == Gender.female
                                                 ? "${AppLocalization.of(context)?.getTranslatedValue('female')}"
                                                 : "${AppLocalization.of(context)?.getTranslatedValue('yourGender')}",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14.0,
-                                          fontFamily: 'Poppins Regular',
+                                          fontFamily: themeProvider.font,
                                         ),
                                       ),
                                       const SizedBox(
@@ -311,7 +312,7 @@ class _ProfileState extends State<Profile> {
                                             "${AppLocalization.of(context)?.getTranslatedValue('male')}",
                                             style: TextStyle(
                                               fontSize: 14.0,
-                                              fontFamily: 'Poppins Regular',
+                                              fontFamily: themeProvider.font,
                                             ),
                                           ),
                                           Icon(
@@ -334,7 +335,7 @@ class _ProfileState extends State<Profile> {
                                             "${AppLocalization.of(context)?.getTranslatedValue('female')}",
                                             style: TextStyle(
                                               fontSize: 14.0,
-                                              fontFamily: 'Poppins Regular',
+                                              fontFamily: themeProvider.font,
                                             ),
                                           ),
                                           Icon(
@@ -364,9 +365,9 @@ class _ProfileState extends State<Profile> {
                                               'Male'
                                           ? "${AppLocalization.of(context)?.getTranslatedValue('male')}"
                                           : "${AppLocalization.of(context)?.getTranslatedValue('female')}",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 14.0,
-                                        fontFamily: 'Poppins Regular',
+                                        fontFamily: themeProvider.font,
                                       ),
                                     ),
                                     const SizedBox(
