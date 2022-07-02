@@ -332,17 +332,18 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                               : CrossFadeState.showFirst,
                           duration: const Duration(milliseconds: 300),
                         ),
-                        ListView.separated(
+                        ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
+                          cacheExtent: 50,
                           itemCount: isSearching == true
                               ? contactsFiltered.length
                               : contacts.length,
-                          separatorBuilder: (context, i) => const Divider(
-                            indent: 10.0,
-                            endIndent: 10.0,
-                            color: Colors.grey,
-                          ),
+                          // separatorBuilder: (context, i) => const Divider(
+                          //   indent: 10.0,
+                          //   endIndent: 10.0,
+                          //   color: Colors.grey,
+                          // ),
                           itemBuilder: (context, i) {
                             AppContact contact = isSearching == true
                                 ? contactsFiltered[i]
@@ -352,7 +353,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                             return ContactItem(
                               onCallPressed: () {
                                 FlutterPhoneDirectCaller.callNumber(
-                                    '${contact.info.phones?.elementAt(0).value}');
+                                    '${contact.info.phones?[i]}');
                               },
                               onMassagePressed: () {
                                 sendMassage(
@@ -528,10 +529,6 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
           return true;
         }
 
-        // if (searchTermFlatten.isEmpty) {
-        //   return false;
-        // }
-
         return true;
       });
     }
@@ -557,7 +554,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
         dividerColor: Colors.transparent,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10.0),
           child: ExpansionTile(
