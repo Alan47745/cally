@@ -48,6 +48,7 @@ dependencies:
   flutter_speed_dial:
   provider:
   url_launcher:
+  flutter_share:
 
 
 #  bloc: ^7.2.1

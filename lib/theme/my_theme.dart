@@ -38,7 +38,6 @@ class MyTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.deepPurple[700],
     ),
-    // fontFamily: themeProvider.font,
     scaffoldBackgroundColor: Colors.grey[900],
     colorScheme: const ColorScheme.dark(),
     primaryColor: Colors.white,
@@ -55,7 +54,6 @@ class MyTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: primaryPurple,
     ),
-    // fontFamily: themeProvider.font,
     scaffoldBackgroundColor: Colors.white,
     colorScheme: const ColorScheme.light(),
     primaryColor: Colors.grey[900],

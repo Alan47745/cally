@@ -153,13 +153,13 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
                                 snapshot.data as Iterable<CallLogEntry>;
                             return Expanded(
                               child: ListView.builder(
-                                // physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
                                 clipBehavior: Clip.none,
                                 itemBuilder: (context, index) {
                                   final themeProvider =
                                       Provider.of<ThemeProvider>(context);
+
                                   return GestureDetector(
+                                    onTap: () {},
                                     child: ListTile(
                                       leading: cl.getAvatar(
                                           entries.elementAt(index).callType!,

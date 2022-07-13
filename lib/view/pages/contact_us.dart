@@ -5,6 +5,7 @@ import 'package:cally/view/pages/home.dart';
 import 'package:cally/widget/showToast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -60,6 +61,32 @@ class _ContactUsState extends State<ContactUs> {
     }
   }
 
+  _launchWhatsapp({
+    required String number,
+  }) async {
+    var whatsappUrl = "whatsapp://send?phone=$number" "&text=";
+    try {
+      launch(whatsappUrl);
+    } catch (e) {
+      showToast(text: e.toString());
+    }
+  }
+
+  Future<void> _launchInstagram({
+    required String username,
+  }) async {
+    var url = 'https://www.instagram.com/$username/';
+
+    try {
+      launch(
+        url,
+        universalLinksOnly: true,
+      );
+    } catch (e) {
+      showToast(text: e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -92,119 +119,115 @@ class _ContactUsState extends State<ContactUs> {
           icon: const Icon(Icons.arrow_back_ios_rounded),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: Container(
-            // height: 500.0,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: themeProvider.isDarkMode == true
-                  ? MyTheme.darkTheme.cardColor.withOpacity(0.3)
-                  : MyTheme.lightTheme.cardColor,
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8.0,
-                  spreadRadius: 2.0,
-                  offset: Offset(0.0, 3.0),
-                ),
-              ],
+      body: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/img/cally_logo.png',
+              height: 200.0,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                contactItem(
-                  title: '+963 981 573 299',
-                  icon: Icons.call,
-                  onTap: () {
-                    FlutterPhoneDirectCaller.callNumber('+963981573299');
-                  },
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(10.0),
-                    topLeft: Radius.circular(10.0),
+            Container(
+              margin: const EdgeInsets.all(12.0),
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: themeProvider.isDarkMode == true
+                    ? MyTheme.darkTheme.cardColor.withOpacity(0.3)
+                    : MyTheme.lightTheme.cardColor,
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8.0,
+                    spreadRadius: 2.0,
+                    offset: Offset(0.0, 3.0),
                   ),
-                ),
-                contactItem(
-                  title: 'alanalhasan0@gmail.com',
-                  icon: Icons.email,
-                  onTap: () {
-                    sendEmail(
-                      email: 'alanalhasan0@gmail.com',
-                    );
-                  },
-                ),
-                contactItem(
-                  title: 'Syria, Tartous, Safita',
-                  icon: Icons.location_on,
-                  onTap: () {},
-                ),
-                contactItem(
-                  title: '+963 969 028 987',
-                  icon: Icons.whatsapp,
-                  onTap: () {},
-                ),
-                contactItem(
-                  title: 'Alan M Alhasan',
-                  icon: Icons.facebook,
-                  onTap: () {
-                    String facebookApp = "fb://profile/100010619418275";
-                    canLaunchUrlString(facebookApp).then((canLaunch) {
-                      if (canLaunch) {
-                        launchUrlString(facebookApp);
-                      } else {
-                        // Do something else
-                      }
-                    });
-                  },
-                ),
-                contactItem(
-                  title: '@alanalhasan',
-                  icon: Icons.camera,
-                  onTap: () async {
-                    const nativeUrl =
-                        "instagram://user?alanalhasan=severities_app";
-                    const webUrl = "https://www.instagram.com/severinas_app/";
-                    if (await canLaunch(nativeUrl)) {
-                      await launch(nativeUrl);
-                    } else if (await canLaunch(webUrl)) {
-                      await launch(webUrl);
-                    } else {
-                      print("can't open Instagram");
-                    }
-
-                    // var url = 'https://www.instagram.com/alanalhasan';
-                    // if (await canLaunch(url)) {
-                    //   await launch(
-                    //     url,
-                    //     universalLinksOnly: true,
-                    //     forceSafariVC: true,
-                    //     forceWebView: true,
-                    //   );
-                    // } else {
-                    //   throw 'There was a problem to open the url: $url';
-                    // }
-                  },
-                ),
-                contactItem(
-                  title: '@alan_m_alhasan',
-                  icon: Icons.flutter_dash,
-                  onTap: () {
-                    socialMediaLauncher(
-                      host: 'twitter.com',
-                      path: 'alan_m_alhasan',
-                    );
-                  },
-                  borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(10.0),
-                    bottomLeft: Radius.circular(10.0),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  contactItem(
+                    title: 'Call Me Direct',
+                    icon: const Icon(Icons.call),
+                    onTap: () {
+                      FlutterPhoneDirectCaller.callNumber('+963981573299');
+                    },
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(10.0),
+                    ),
                   ),
-                ),
-              ],
+                  contactItem(
+                    title: 'Email Me',
+                    icon: const Icon(Icons.email),
+                    onTap: () {
+                      sendEmail(
+                        email: 'alanalhasan0@gmail.com',
+                      );
+                    },
+                  ),
+                  contactItem(
+                    title: 'Syria, Tartous, Safita',
+                    icon: const Icon(Icons.location_on),
+                    onTap: () {},
+                  ),
+                  contactItem(
+                    title: 'WhatsApp',
+                    icon: const Icon(Icons.whatsapp),
+                    onTap: () {
+                      _launchWhatsapp(number: '+963969028987');
+                    },
+                  ),
+                  contactItem(
+                    title: 'Facebook',
+                    icon: const Icon(Icons.facebook),
+                    onTap: () {
+                      String facebookApp = "fb://profile/100010619418275";
+                      canLaunchUrlString(facebookApp).then((canLaunch) {
+                        if (canLaunch) {
+                          launchUrlString(facebookApp);
+                        } else {
+                          // Do something else
+                        }
+                      });
+                    },
+                  ),
+                  contactItem(
+                    title: 'Instagram',
+                    icon: SvgPicture.asset(
+                      'assets/img/instagram_icon.svg',
+                      height: 25.0,
+                      width: 25.0,
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      _launchInstagram(username: 'alanalhasan');
+                    },
+                  ),
+                  contactItem(
+                    title: 'Twitter',
+                    icon: SvgPicture.asset(
+                      'assets/img/twitter_icon.svg',
+                      height: 22.0,
+                      width: 22.0,
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      socialMediaLauncher(
+                        host: 'twitter.com',
+                        path: 'alan_m_alhasan',
+                      );
+                    },
+                    borderRadius: const BorderRadius.only(
+                      bottomRight: Radius.circular(10.0),
+                      bottomLeft: Radius.circular(10.0),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -212,7 +235,7 @@ class _ContactUsState extends State<ContactUs> {
 
   Widget contactItem({
     required String title,
-    required IconData icon,
+    required Widget icon,
     void Function()? onTap,
     BorderRadiusGeometry? borderRadius = BorderRadius.zero,
   }) {
@@ -233,7 +256,7 @@ class _ContactUsState extends State<ContactUs> {
             fontFamily: 'Poppins Regular',
           ),
         ),
-        leading: Icon(icon),
+        leading: icon,
       ),
     );
   }

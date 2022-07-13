@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -223,10 +224,34 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    bottom: 15.0,
+                                    left: 0.0,
+                                    bottom: 0.0,
                                   ),
-                                  child: Text('${contacts.length} Contacts'),
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                      top: 8.0,
+                                      bottom: 8.0,
+                                      right: 12.0,
+                                      left: 18.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: themeProvider.isDarkMode == true
+                                          ? MyTheme.darkTheme.appBarTheme
+                                              .backgroundColor
+                                          : MyTheme.lightTheme.appBarTheme
+                                              .backgroundColor,
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(30.0),
+                                        topRight: Radius.circular(5.0),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '${contacts.length} ${AppLocalization.of(context)?.getTranslatedValue('contacts')}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -336,14 +361,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           cacheExtent: 50,
-                          itemCount: isSearching == true
-                              ? contactsFiltered.length
-                              : contacts.length,
-                          // separatorBuilder: (context, i) => const Divider(
-                          //   indent: 10.0,
-                          //   endIndent: 10.0,
-                          //   color: Colors.grey,
-                          // ),
+                          itemCount:
+                              isSearching == true ? contactsFiltered.length : 5,
+                          // : contacts.length,
                           itemBuilder: (context, i) {
                             AppContact contact = isSearching == true
                                 ? contactsFiltered[i]
@@ -463,6 +483,11 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                 ContactsService.openExistingContact(
                                     contact.info);
                               },
+                              share: () {
+                                shareFile(
+                                  filePath: contact.info.displayName!,
+                                );
+                              },
                               name: '${contact.info.displayName}',
                               nickname: contact.info.phones!.isNotEmpty
                                   ? '${contact.info.phones?.elementAt(0).value}'
@@ -537,12 +562,26 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
     });
   }
 
+  Future<void> shareFile({
+    required String filePath,
+  }) async {
+    List<dynamic> docs = contacts;
+    if (docs.isEmpty) return;
+
+    await FlutterShare.shareFile(
+      title: 'Example share',
+      text: 'Example share text',
+      filePath: filePath,
+    );
+  }
+
   Widget ContactItem({
     required String name,
     required String nickname,
     required Widget avatar,
     required VoidCallback? delete,
     required VoidCallback? edit,
+    required VoidCallback? share,
     void Function()? onTap,
     required void Function()? onCallPressed,
     required void Function()? onMassagePressed,
@@ -645,6 +684,29 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
+                    PopupMenuItem(
+                      onTap: share,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Share',
+                            style: TextStyle(
+                              fontFamily: themeProvider.font,
+                              color: themeProvider.isDarkMode == true
+                                  ? MyTheme.darkTheme.primaryColor
+                                  : MyTheme.lightTheme.primaryColor,
+                            ),
+                          ),
+                          Icon(
+                            Icons.share,
+                            color: themeProvider.isDarkMode == true
+                                ? MyTheme.darkTheme.primaryColor
+                                : MyTheme.lightTheme.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
                   ];
                 },
               ),
@@ -669,7 +731,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                     child: SizedBox(
                       height: 50.0,
                       child: MaterialButton(
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
                         elevation: 0.0,
@@ -680,7 +742,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                         onPressed: onCallPressed,
                         padding: EdgeInsets.zero,
                         color: CupertinoColors.systemGreen,
-                        child: Icon(
+                        child: const Icon(
                           Icons.call,
                           color: Colors.yellow,
                         ),
@@ -691,7 +753,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                     child: SizedBox(
                       height: 50.0,
                       child: MaterialButton(
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
                         elevation: 0.0,
@@ -702,7 +764,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                         onPressed: onMassagePressed,
                         padding: EdgeInsets.zero,
                         color: CupertinoColors.systemBlue,
-                        child: Icon(
+                        child: const Icon(
                           Icons.chat,
                           color: Colors.white,
                         ),

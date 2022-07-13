@@ -18,7 +18,6 @@ void main() async {
   );
 
   await CacheHelper.init();
-
   runApp(MyApp());
 }
 

@@ -1,13 +1,13 @@
 import 'package:cally/localization/localization.dart';
-import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
 import 'package:cally/model/custom_page_route.dart';
 import 'package:cally/view/pages/contact_us.dart';
+import 'package:cally/view/pages/policy_privacy.dart';
 import 'package:cally/view/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:provider/provider.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -18,6 +18,15 @@ class DrawerPage extends StatefulWidget {
 }
 
 class _DrawerPageState extends State<DrawerPage> {
+  Future<void> share() async {
+    await FlutterShare.share(
+      title: 'Share Cally',
+      text: 'Download Cally and make best voice call',
+      linkUrl: 'https://flutter.dev/',
+      chooserTitle: 'Share Cally',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -56,29 +65,29 @@ class _DrawerPageState extends State<DrawerPage> {
               ),
             ),
           ),
-          Divider(
-            color: Colors.grey[200],
-            indent: 30.0,
-            endIndent: 40.0,
-          ),
-          MaterialButton(
-            onPressed: () {},
-            child: ListTile(
-              title: Text(
-                '${AppLocalization.of(context)?.getTranslatedValue('aboutUs')}',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontFamily: themeProvider.font,
-                ),
-              ),
-              leading: const Icon(
-                Icons.list_alt_rounded,
-                color: Colors.white,
-                size: 23.0,
-              ),
-            ),
-          ),
+          // Divider(
+          //   color: Colors.grey[200],
+          //   indent: 30.0,
+          //   endIndent: 40.0,
+          // ),
+          // MaterialButton(
+          //   onPressed: () {},
+          //   child: ListTile(
+          //     title: Text(
+          //       '${AppLocalization.of(context)?.getTranslatedValue('aboutUs')}',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //         fontSize: 16.0,
+          //         fontFamily: themeProvider.font,
+          //       ),
+          //     ),
+          //     leading: const Icon(
+          //       Icons.list_alt_rounded,
+          //       color: Colors.white,
+          //       size: 23.0,
+          //     ),
+          //   ),
+          // ),
           Divider(
             color: Colors.grey[200],
             indent: 30.0,
@@ -116,7 +125,15 @@ class _DrawerPageState extends State<DrawerPage> {
             endIndent: 40.0,
           ),
           MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                CustomPageRoute(
+                  child: PolicyPrivacy(),
+                  direction: AxisDirection.left,
+                  duration: const Duration(milliseconds: 300),
+                ),
+              );
+            },
             child: ListTile(
               title: Text(
                 '${AppLocalization.of(context)?.getTranslatedValue('privacyPolicy')}',
@@ -139,10 +156,12 @@ class _DrawerPageState extends State<DrawerPage> {
             endIndent: 40.0,
           ),
           MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              share();
+            },
             child: ListTile(
               title: Text(
-                '${AppLocalization.of(context)?.getTranslatedValue('rateUs')}',
+                '${AppLocalization.of(context)?.getTranslatedValue('shareApp')}',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -150,7 +169,7 @@ class _DrawerPageState extends State<DrawerPage> {
                 ),
               ),
               leading: const Icon(
-                Icons.rate_review,
+                Icons.share,
                 color: Colors.white,
                 size: 23.0,
               ),
