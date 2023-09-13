@@ -11,6 +11,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ContactUs extends StatefulWidget {
+  const ContactUs({super.key});
+
   @override
   _ContactUsState createState() {
     return _ContactUsState();
@@ -149,7 +151,12 @@ class _ContactUsState extends State<ContactUs> {
                 children: [
                   contactItem(
                     title: 'Call Me Direct',
-                    icon: const Icon(Icons.call),
+                    icon: Icon(
+                      Icons.call,
+                      color: themeProvider.isDarkMode == true
+                          ? MyTheme.darkTheme.primaryColor
+                          : MyTheme.lightTheme.primaryColor,
+                    ),
                     onTap: () {
                       FlutterPhoneDirectCaller.callNumber('+963981573299');
                     },
@@ -160,7 +167,12 @@ class _ContactUsState extends State<ContactUs> {
                   ),
                   contactItem(
                     title: 'Email Me',
-                    icon: const Icon(Icons.email),
+                    icon: Icon(
+                      Icons.email,
+                      color: themeProvider.isDarkMode == true
+                          ? MyTheme.darkTheme.primaryColor
+                          : MyTheme.lightTheme.primaryColor,
+                    ),
                     onTap: () {
                       sendEmail(
                         email: 'alanalhasan0@gmail.com',
@@ -169,19 +181,34 @@ class _ContactUsState extends State<ContactUs> {
                   ),
                   contactItem(
                     title: 'Syria, Tartous, Safita',
-                    icon: const Icon(Icons.location_on),
+                    icon: Icon(
+                      Icons.location_on,
+                      color: themeProvider.isDarkMode == true
+                          ? MyTheme.darkTheme.primaryColor
+                          : MyTheme.lightTheme.primaryColor,
+                    ),
                     onTap: () {},
                   ),
                   contactItem(
                     title: 'WhatsApp',
-                    icon: const Icon(Icons.whatsapp),
+                    icon: Icon(
+                      Icons.whatshot,
+                      color: themeProvider.isDarkMode == true
+                          ? MyTheme.darkTheme.primaryColor
+                          : MyTheme.lightTheme.primaryColor,
+                    ),
                     onTap: () {
                       _launchWhatsapp(number: '+963969028987');
                     },
                   ),
                   contactItem(
                     title: 'Facebook',
-                    icon: const Icon(Icons.facebook),
+                    icon: Icon(
+                      Icons.facebook,
+                      color: themeProvider.isDarkMode == true
+                          ? MyTheme.darkTheme.primaryColor
+                          : MyTheme.lightTheme.primaryColor,
+                    ),
                     onTap: () {
                       String facebookApp = "fb://profile/100010619418275";
                       canLaunchUrlString(facebookApp).then((canLaunch) {
@@ -199,7 +226,9 @@ class _ContactUsState extends State<ContactUs> {
                       'assets/img/instagram_icon.svg',
                       height: 25.0,
                       width: 25.0,
-                      color: Colors.white,
+                      color: themeProvider.isDarkMode == true
+                          ? MyTheme.darkTheme.primaryColor
+                          : MyTheme.lightTheme.primaryColor,
                     ),
                     onTap: () {
                       _launchInstagram(username: 'alanalhasan');
@@ -211,7 +240,9 @@ class _ContactUsState extends State<ContactUs> {
                       'assets/img/twitter_icon.svg',
                       height: 22.0,
                       width: 22.0,
-                      color: Colors.white,
+                      color: themeProvider.isDarkMode == true
+                          ? MyTheme.darkTheme.primaryColor
+                          : MyTheme.lightTheme.primaryColor,
                     ),
                     onTap: () {
                       socialMediaLauncher(

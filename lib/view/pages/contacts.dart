@@ -1,45 +1,61 @@
+// ignore_for_file: unnecessary_string_interpolations, null_check_always_fails, unnecessary_null_comparison, non_constant_identifier_names, deprecated_member_use
+
 import 'dart:io';
 
 import 'package:cally/localization/localization.dart';
 import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
-import 'package:cally/model/appContacts.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/constant.dart';
 import 'package:cally/widget/showToast.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'dart:typed_data';
 
 enum SearchOptions { open, close }
 
-class Contacts extends StatefulWidget {
+class MyContacts extends StatefulWidget {
+  const MyContacts({super.key});
+
   @override
-  _ContactsState createState() {
-    return _ContactsState();
+  _MyContactsState createState() {
+    return _MyContactsState();
   }
 }
 
-class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
-  List<AppContact> contacts = [];
-  List<AppContact> contactsFiltered = [];
+class _MyContactsState extends State<MyContacts> with WidgetsBindingObserver {
+  List<Contact> contacts = [];
+  List<Contact> contactsFiltered = [];
 
-  TextEditingController searchController = TextEditingController();
+  var searchController = TextEditingController();
   bool contactsLoaded = true;
 
   @override
   void initState() {
     super.initState();
+    FlutterContacts.addListener(() {
+      getAllContacts();
+    });
     WidgetsBinding.instance.addObserver(this);
-    getPermissions();
+    getAllContacts().then((value) {
+      if (mounted) {
+        setState(() {
+          contactsLoaded = false;
+        });
+      }
+    }).catchError((error) {
+      debugPrint(error);
+    });
+
+    searchController.addListener(() {
+      filterContacts();
+    });
   }
 
   @override
@@ -48,34 +64,36 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  Future<void> getPermissions() async {
-    if (await Permission.contacts.request().isGranted) {
-      getAllContacts().then((value) {
-        if (mounted) {
-          setState(() {
-            contactsLoaded = false;
-          });
-        }
-      }).catchError((error) {
-        debugPrint(error);
-      });
+  // Future<void> getPermissions() async {
+  //   if (await Permission.contacts.request().isGranted) {
+  //     getAllContacts().then((value) {
+  //       if (mounted) {
+  //         setState(() {
+  //           contactsLoaded = false;
+  //         });
+  //       }
+  //     }).catchError((error) {
+  //       debugPrint(error);
+  //     });
 
-      searchController.addListener(() {
-        filterContacts();
-      });
-    } else {
-      await Permission.contacts.request();
-    }
-  }
+  //     searchController.addListener(() {
+  //       filterContacts();
+  //     });
+  //   } else {
+  //     await Permission.contacts.request();
+  //   }
+  // }
 
   Future<void> getAllContacts() async {
-    List<AppContact> _contacts =
-        (await ContactsService.getContacts()).map((contact) {
-      return AppContact(info: contact);
-    }).toList();
-    setState(() {
-      contacts = _contacts;
-    });
+    if (await FlutterContacts.requestPermission()) {
+      contacts = await FlutterContacts.getContacts(
+        withProperties: true,
+        withPhoto: true,
+        withThumbnail: true,
+        withAccounts: true,
+      );
+      setState(() {});
+    }
   }
 
   SearchOptions option = SearchOptions.close;
@@ -118,7 +136,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                     children: [
                       SpeedDialChild(
                         child: const Icon(Icons.person_add),
-                        onTap: () => ContactsService.openContactForm(),
+                        onTap: () => FlutterContacts.openExternalInsert(),
                       ),
                       if (contacts.isNotEmpty)
                         SpeedDialChild(
@@ -286,6 +304,9 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                       ? MyTheme.darkTheme.primaryColor
                                       : MyTheme.lightTheme.primaryColor,
                                 ),
+                                onChanged: (value) {
+                                  setState(() {});
+                                },
                                 decoration: InputDecoration(
                                   suffixIcon: IconButton(
                                     color: primaryPurple,
@@ -361,24 +382,24 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           cacheExtent: 50,
-                          itemCount:
-                              isSearching == true ? contactsFiltered.length : 5,
-                          // : contacts.length,
+                          itemCount: isSearching == true
+                              ? contactsFiltered.length
+                              : contacts.length,
                           itemBuilder: (context, i) {
-                            AppContact contact = isSearching == true
+                            Uint8List? img = contacts[i].photo;
+                            Contact contact = isSearching == true
                                 ? contactsFiltered[i]
                                 : contacts[i];
                             String customAvatar =
-                                '${contact.info.displayName?.trim().split(' ').map((l) => l[0]).take(1).join().replaceAll(RegExp('[^A-Za-z-ا-ي-آ-أ-إ]'), '').toUpperCase()}';
+                                '${contact.displayName.trim().split(' ').map((l) => l[0]).take(1).join().replaceAll(RegExp('[^A-Za-z-ا-ي-آ-أ-إ]'), '').toUpperCase()}';
                             return ContactItem(
                               onCallPressed: () {
                                 FlutterPhoneDirectCaller.callNumber(
-                                    '${contact.info.phones?[i]}');
+                                    '${contact.phones.first.number}');
                               },
                               onMassagePressed: () {
                                 sendMassage(
-                                    number:
-                                        '${contact.info.phones?.elementAt(0).value}',
+                                    number: '${contact.phones.first.number}',
                                     massage: '');
                               },
                               onTap: () {},
@@ -417,7 +438,7 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                         fontFamily: themeProvider.font,
                                       ),
                                       content: Text(
-                                          '${AppLocalization.of(context)?.getTranslatedValue('areYouSure')}\n${contact.info.displayName} ?'),
+                                          '${AppLocalization.of(context)?.getTranslatedValue('areYouSure')}\n${contact.displayName} ?'),
                                       actions: <Widget>[
                                         TextButton(
                                           style: ButtonStyle(
@@ -437,8 +458,8 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                           ),
                                           onPressed: () {
                                             Navigator.pop(dialogContext);
-                                            ContactsService.deleteContact(
-                                                    contact.info)
+                                            FlutterContacts.deleteContact(
+                                                    contact)
                                                 .then((value) {
                                               setState(() {
                                                 contactsLoaded = true;
@@ -480,24 +501,19 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                                 );
                               },
                               edit: () {
-                                ContactsService.openExistingContact(
-                                    contact.info);
+                                FlutterContacts.openExternalEdit(contact.id);
                               },
-                              share: () {
-                                shareFile(
-                                  filePath: contact.info.displayName!,
-                                );
-                              },
-                              name: '${contact.info.displayName}',
-                              nickname: contact.info.phones!.isNotEmpty
-                                  ? '${contact.info.phones?.elementAt(0).value}'
+                              share: () {},
+                              name: '${contact.displayName}',
+                              nickname: contact.phones.isNotEmpty
+                                  ? '${contact.phones.first.number}'
                                   : '',
-                              avatar: contact.info.avatar!.isNotEmpty
+                              avatar: img != null
                                   ? CircleAvatar(
                                       foregroundColor: primaryPurple,
                                       maxRadius: 40.0,
                                       backgroundImage: MemoryImage(
-                                        contact.info.avatar!,
+                                        img,
                                       ),
                                     )
                                   : customAvatar == ''
@@ -541,38 +557,42 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
     );
   }
 
+  String flattenPhoneNumber(String phoneStr) {
+    return phoneStr.replaceAllMapped(RegExp(r'^(\+)|\D'), (Match m) {
+      return m[0] == "+" ? "+" : "";
+    });
+  }
+
   filterContacts() {
-    List<AppContact> _contacts = [];
+    List<Contact> _contacts = [];
     _contacts.addAll(contacts);
     if (searchController.text.isNotEmpty) {
       _contacts.retainWhere((contact) {
         String searchTerm = searchController.text.toLowerCase();
-        // String searchTermFlatten = flattenPhoneNumber(searchTerm);
-        String contactName = "${contact.info.displayName?.toLowerCase()}";
+        String searchTermFlatten = flattenPhoneNumber(searchTerm);
+        String contactName = contact.displayName.toLowerCase();
         bool nameMatches = contactName.contains(searchTerm);
         if (nameMatches == true) {
           return true;
         }
 
-        return true;
+        if (searchTermFlatten.isEmpty) {
+          return false;
+        }
+
+        var phone = contact.phones.firstWhere((phn) {
+          String phnFlattened = flattenPhoneNumber(phn.number);
+          return phnFlattened.contains(searchTermFlatten);
+        }, orElse: () {
+          return null!;
+        });
+
+        return phone != null;
       });
     }
     setState(() {
       contactsFiltered = _contacts;
     });
-  }
-
-  Future<void> shareFile({
-    required String filePath,
-  }) async {
-    List<dynamic> docs = contacts;
-    if (docs.isEmpty) return;
-
-    await FlutterShare.shareFile(
-      title: 'Example share',
-      text: 'Example share text',
-      filePath: filePath,
-    );
   }
 
   Widget ContactItem({
@@ -684,38 +704,11 @@ class _ContactsState extends State<Contacts> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                    PopupMenuItem(
-                      onTap: share,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Share',
-                            style: TextStyle(
-                              fontFamily: themeProvider.font,
-                              color: themeProvider.isDarkMode == true
-                                  ? MyTheme.darkTheme.primaryColor
-                                  : MyTheme.lightTheme.primaryColor,
-                            ),
-                          ),
-                          Icon(
-                            Icons.share,
-                            color: themeProvider.isDarkMode == true
-                                ? MyTheme.darkTheme.primaryColor
-                                : MyTheme.lightTheme.primaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
                   ];
                 },
               ),
             ),
-            onExpansionChanged: (bool isExpand) {
-              setState(() {
-                // isExpanded = isExpand;
-              });
-            },
+            onExpansionChanged: (bool isExpand) {},
             childrenPadding: EdgeInsets.zero,
             tilePadding: EdgeInsets.zero,
             iconColor: Colors.transparent,

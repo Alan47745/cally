@@ -1,12 +1,15 @@
 // ignore_for_file: use_key_in_widget_constructors, avoid_print, sized_box_for_whitespace
 
+import 'package:cally/localization/localization.dart';
 import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/model/custom_page_route.dart';
+import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/constant.dart';
-import 'package:cally/view/pages/home.dart';
+import 'package:cally/view/auth/google_sign_in.dart';
 import 'package:cally/widget/custom_text_field.dart';
 import 'package:cally/widget/showToast.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum Gender { male, female, nothing }
 
@@ -18,7 +21,7 @@ class SignUser extends StatefulWidget {
 }
 
 class _SignUserState extends State<SignUser> {
-  var nameCon = TextEditingController();
+  // var nameCon = TextEditingController();
   var phoneCon = TextEditingController();
   var emailCon = TextEditingController();
   var passwordCon = TextEditingController();
@@ -31,8 +34,11 @@ class _SignUserState extends State<SignUser> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      backgroundColor: primaryPurple,
+      backgroundColor: themeProvider.isDarkMode == true
+          ? MyTheme.darkTheme.appBarTheme.backgroundColor
+          : MyTheme.lightTheme.appBarTheme.backgroundColor,
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -41,13 +47,13 @@ class _SignUserState extends State<SignUser> {
           children: [
             Visibility(
               visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
-              child: const Text(
-                'Sign With Us',
+              child: Text(
+                "${AppLocalization.of(context)?.getTranslatedValue('signWithUs')}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   fontSize: 35.0,
-                  fontFamily: 'Poppins Regular',
+                  fontFamily: themeProvider.font,
                 ),
               ),
             ),
@@ -56,7 +62,9 @@ class _SignUserState extends State<SignUser> {
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               width: MediaQuery.of(context).size.width * 0.85,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: themeProvider.isDarkMode == true
+                    ? MyTheme.darkTheme.cardColor
+                    : MyTheme.lightTheme.cardColor,
                 borderRadius: BorderRadius.circular(20.0),
                 boxShadow: const [
                   BoxShadow(
@@ -71,38 +79,64 @@ class _SignUserState extends State<SignUser> {
                 key: formKey,
                 child: Column(
                   children: [
-                    CustomTextFormField(
-                        controller: nameCon,
-                        hintText: 'Your Name',
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '';
-                          }
-                          return null;
-                        }),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    CustomTextFormField(
+                    // CustomTextFormField(
+                    //     fontFamily: themeProvider.font,
+                    //     controller: nameCon,
+                    //     hintText:
+                    //         "${AppLocalization.of(context)?.getTranslatedValue('yourName')}",
+                    //     hintColor: themeProvider.isDarkMode == true
+                    //         ? MyTheme.darkTheme.primaryColor
+                    //         : MyTheme.lightTheme.primaryColor,
+                    //     keyboardType: TextInputType.name,
+                    //     textInputAction: TextInputAction.next,
+                    //     fillColor: themeProvider.isDarkMode == true
+                    //         ? MyTheme.darkTheme.cardColor
+                    //         : MyTheme.lightTheme.cardColor,
+                    //     filled: true,
+                    //     validator: (value) {
+                    //       if (value!.isEmpty) {
+                    //         return '';
+                    //       }
+                    //       return null;
+                    //     }),
+                    // const SizedBox(
+                    //   height: 20.0,
+                    // ),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: CustomTextFormField(
+                        fontFamily: themeProvider.font,
                         controller: phoneCon,
-                        hintText: 'Your Number',
+                        hintText:
+                            "${AppLocalization.of(context)?.getTranslatedValue('yourNumber')}",
+                        hintColor: themeProvider.isDarkMode == true
+                            ? MyTheme.darkTheme.primaryColor
+                            : MyTheme.lightTheme.primaryColor,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.done,
+                        fillColor: themeProvider.isDarkMode == true
+                            ? MyTheme.darkTheme.cardColor
+                            : MyTheme.lightTheme.cardColor,
+                        filled: true,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return '';
                           }
                           return null;
-                        }),
+                        },
+                        context: context,
+                      ),
+                    ),
                     const SizedBox(
-                      height: 20.0,
+                      height: 40.0,
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: 50.0,
                       decoration: BoxDecoration(
+                        color: themeProvider.isDarkMode == true
+                            ? MyTheme.darkTheme.cardColor
+                            : MyTheme.lightTheme.cardColor,
                         borderRadius: BorderRadius.circular(15.0),
                         border: Border.all(
                           color: Colors.grey,
@@ -124,13 +158,13 @@ class _SignUserState extends State<SignUser> {
                           children: [
                             Text(
                               choice == Gender.male
-                                  ? 'Male'
+                                  ? "${AppLocalization.of(context)?.getTranslatedValue('male')}"
                                   : choice == Gender.female
-                                      ? 'Female'
-                                      : 'Your Gender',
-                              style: const TextStyle(
+                                      ? "${AppLocalization.of(context)?.getTranslatedValue('female')}"
+                                      : "${AppLocalization.of(context)?.getTranslatedValue('yourGender')}",
+                              style: TextStyle(
                                 fontSize: 14.0,
-                                fontFamily: 'Poppins Regular',
+                                fontFamily: themeProvider.font,
                               ),
                             ),
                             const SizedBox(
@@ -155,15 +189,15 @@ class _SignUserState extends State<SignUser> {
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Male',
+                                  "${AppLocalization.of(context)?.getTranslatedValue('male')}",
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    fontFamily: 'Poppins Regular',
+                                    fontFamily: themeProvider.font,
                                   ),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.male,
                                   size: 18.0,
                                 ),
@@ -177,15 +211,15 @@ class _SignUserState extends State<SignUser> {
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Female',
+                                  "${AppLocalization.of(context)?.getTranslatedValue('female')}",
                                   style: TextStyle(
                                     fontSize: 14.0,
-                                    fontFamily: 'Poppins Regular',
+                                    fontFamily: themeProvider.font,
                                   ),
                                 ),
-                                Icon(
+                                const Icon(
                                   Icons.female,
                                   size: 18.0,
                                 ),
@@ -196,7 +230,7 @@ class _SignUserState extends State<SignUser> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20.0,
+                      height: 30.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -220,7 +254,12 @@ class _SignUserState extends State<SignUser> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 30.0),
                                       child: Dialog(
-                                        backgroundColor: primaryPurple,
+                                        backgroundColor:
+                                            themeProvider.isDarkMode == true
+                                                ? MyTheme.darkTheme.appBarTheme
+                                                    .backgroundColor
+                                                : MyTheme.lightTheme.appBarTheme
+                                                    .backgroundColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20.0),
@@ -232,51 +271,63 @@ class _SignUserState extends State<SignUser> {
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
-                                              children: const [
+                                              children: [
                                                 Text(
-                                                  'Terms & Conditions\n',
+                                                  "${AppLocalization.of(context)?.getTranslatedValue('tC_termsConditions')}",
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 20.0,
+                                                    fontFamily:
+                                                        themeProvider.font,
                                                   ),
                                                 ),
                                                 Text(
-                                                  'By downloading or using the app, these terms will automatically apply to you – you should make sure therefore that you read them carefully before using the app. You’re not allowed to copy or modify the app, any part of the app, or our trademarks in any way. You’re not allowed to attempt to extract the source code of the app, and you also shouldn’t try to translate the app into other languages or make derivative versions. The app itself, and all the trademarks, copyright, database rights, and other intellectual property rights related to it, still belong to Alan Majed Alhasan.\nAlan Majed Alhasan is committed to ensuring that the app is as useful and efficient as possible. For that reason, we reserve the right to make changes to the app or to charge for its services, at any time and for any reason. We will never charge you for the app or its services without making it very clear to you exactly what you’re paying for.\nThe Cally app stores and processes personal data that you have provided to us, to provide my Service. It’s your responsibility to keep your phone and access to the app secure. We therefore recommend that you do not jailbreak or root your phone, which is the process of removing software restrictions and limitations imposed by the official operating system of your device. It could make your phone vulnerable to malware/viruses/malicious programs, compromise your phone’s security features and it could mean that the Cally app won’t work properly or at all.\nYou should be aware that there are certain things that Alan Majed Alhasan will not take responsibility for. Certain functions of the app will require the app to have an active internet connection. The connection can be Wi-Fi or provided by your mobile network provider, but Alan Majed Alhasan cannot take responsibility for the app not working at full functionality if you don’t have access to Wi-Fi, and you don’t have any of your data allowance left.\nIf you’re using the app outside of an area with Wi-Fi, you should remember that the terms of the agreement with your mobile network provider will still apply. As a result, you may be charged by your mobile provider for the cost of data for the duration of the connection while accessing the app, or other third-party charges. In using the app, you’re accepting responsibility for any such charges, including roaming data charges if you use the app outside of your home territory (i.e. region or country) without turning off data roaming. If you are not the bill payer for the device on which you’re using the app, please be aware that we assume that you have received permission from the bill payer for using the app.\nAlong the same lines, Alan Majed Alhasan cannot always take responsibility for the way you use the app i.e. You need to make sure that your device stays charged – if it runs out of battery and you can’t turn it on to avail the Service, Alan Majed Alhasan cannot accept responsibility.\nWith respect to Alan Majed Alhasan’s responsibility for your use of the app, when you’re using the app, it’s important to bear in mind that although we endeavor to ensure that it is updated and correct at all times, we do rely on third parties to provide information to us so that we can make it available to you. Alan Majed Alhasan accepts no liability for any loss, direct or indirect, you experience as a result of relying wholly on this functionality of the app.\nAt some point, we may wish to update the app. The app is currently available on Android & iOS – the requirements for the both systems(and for any additional systems we decide to extend the availability of the app to) may change, and you’ll need to download the updates if you want to keep using the app. Alan Majed Alhasan does not promise that it will always update the app so that it is relevant to you and/or works with the Android & iOS version that you have installed on your device. However, you promise to always accept updates to the application when offered to you, We may also wish to stop providing the app, and may terminate use of it at any time without giving notice of termination to you. Unless we tell you otherwise, upon any termination, (a) the rights and licenses granted to you in these terms will end; (b) you must stop using the app, and (if needed) delete it from your device.',
+                                                  "${AppLocalization.of(context)?.getTranslatedValue('tC_termsConditions_text')}",
                                                   style: TextStyle(
                                                     color: Colors.white,
+                                                    fontFamily:
+                                                        themeProvider.font,
                                                   ),
                                                 ),
                                                 //
-                                                SizedBox(height: 20.0),
+                                                const SizedBox(height: 20.0),
                                                 Text(
-                                                  'Changes to This Terms and Conditions\n',
+                                                  "${AppLocalization.of(context)?.getTranslatedValue('tC_changesTermsConditions')}",
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 20.0,
+                                                    fontFamily:
+                                                        themeProvider.font,
                                                   ),
                                                 ),
                                                 Text(
-                                                  'I may update our Terms and Conditions from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Terms and Conditions on this page.\nThese terms and conditions are effective as of 2022-01-01',
+                                                  "${AppLocalization.of(context)?.getTranslatedValue('tC_changesTermsConditions_text')}",
                                                   style: TextStyle(
                                                     color: Colors.white,
+                                                    fontFamily:
+                                                        themeProvider.font,
                                                   ),
                                                 ),
                                                 //
-                                                SizedBox(height: 20.0),
+                                                const SizedBox(height: 20.0),
                                                 Text(
-                                                  'Contact Us\n',
+                                                  "${AppLocalization.of(context)?.getTranslatedValue('tC_contactUs')}",
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 20.0,
+                                                    fontFamily:
+                                                        themeProvider.font,
                                                   ),
                                                 ),
                                                 Text(
-                                                  'If you have any questions or suggestions about my Terms and Conditions, do not hesitate to contact me at alanalhasan0@gmail.com.',
+                                                  "${AppLocalization.of(context)?.getTranslatedValue('tC_contactUs_text')}",
                                                   style: TextStyle(
                                                     color: Colors.white,
+                                                    fontFamily:
+                                                        themeProvider.font,
                                                   ),
                                                 ),
                                               ],
@@ -289,13 +340,14 @@ class _SignUserState extends State<SignUser> {
                                 },
                               );
                             },
-                            child: const Text(
-                              'Agree Terms & Conditions',
+                            child: Text(
+                              "${AppLocalization.of(context)?.getTranslatedValue('agreeTermsConditions')}",
                               style: TextStyle(
-                                color: primaryPurple,
+                                color: themeProvider.isDarkMode == true
+                                    ? Colors.white
+                                    : primaryPurple,
                                 fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                                decorationThickness: 1.5,
+                                fontFamily: themeProvider.font,
                               ),
                             ),
                           ),
@@ -314,22 +366,6 @@ class _SignUserState extends State<SignUser> {
                         ],
                       ),
                     ),
-                    // CheckboxListTile(
-                    //   title: Text('Agree Terms & Conditions'),
-                    //   activeColor: primaryPurple,
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(50.0),
-                    //   ),
-                    //   checkboxShape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(50.0),
-                    //   ),
-                    //   value: isAgree,
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       isAgree = value!;
-                    //     });
-                    //   },
-                    // ),
                   ],
                 ),
               ),
@@ -358,16 +394,15 @@ class _SignUserState extends State<SignUser> {
                                   const Duration(milliseconds: 1500));
 
                               CacheHelper.saveData(
-                                  key: 'name', value: nameCon.text);
-                              CacheHelper.saveData(
                                   key: 'phone', value: phoneCon.text);
                               CacheHelper.saveData(
                                   key: 'gender', value: gender);
                               CacheHelper.saveData(
                                   key: 'introFinished', value: true);
+
                               Navigator.of(context).pushAndRemoveUntil(
                                 CustomPageRoute(
-                                  child: Home(),
+                                  child: GoogleSignInPage(),
                                   direction: AxisDirection.right,
                                   duration: const Duration(milliseconds: 300),
                                 ),
@@ -375,10 +410,15 @@ class _SignUserState extends State<SignUser> {
                               );
                             } else {
                               showToast(
-                                  text: 'Please Agree Terms & Conditions');
+                                text:
+                                    "${AppLocalization.of(context)?.getTranslatedValue('pleaseAgreeTermsConditions')}",
+                              );
                             }
                           } else {
-                            showToast(text: 'Please Choose Your Gender');
+                            showToast(
+                              text:
+                                  "${AppLocalization.of(context)?.getTranslatedValue('plzChooseGender')}",
+                            );
                           }
                         }
                       },
@@ -393,13 +433,16 @@ class _SignUserState extends State<SignUser> {
                           ),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Save',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Poppins Regular',
+                          color: themeProvider.isDarkMode == true
+                              ? MyTheme.darkTheme.appBarTheme.backgroundColor
+                              : MyTheme.lightTheme.appBarTheme.backgroundColor,
                         ),
                       ),
                     ),

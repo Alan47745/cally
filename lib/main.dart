@@ -2,8 +2,8 @@
 
 import 'package:cally/localization/localization.dart';
 import 'package:cally/model/cacheHelper.dart';
-import 'package:cally/view/pages/splash.dart';
 import 'package:cally/theme/my_theme.dart';
+import 'package:cally/view/pages/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -11,34 +11,40 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [],
   );
 
   await CacheHelper.init();
+
+  if (CacheHelper.getData(key: 'isVibrationEnabled') == null) {
+    CacheHelper.saveData(key: 'isVibrationEnabled', value: true);
+  }
+  if (CacheHelper.getData(key: 'isSoundEnabled') == null) {
+    CacheHelper.saveData(key: 'isSoundEnabled', value: true);
+  }
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+
   static void setLocale(BuildContext context, Locale locale) {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(locale);
   }
-
-  @override
-  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  Locale? _locale;
+
   void setLocale(Locale locale) {
     setState(() {
       _locale = locale;
     });
   }
-
-  Locale? _locale;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +52,6 @@ class _MyAppState extends State<MyApp> {
       create: (context) => ThemeProvider(),
       builder: (context, _) {
         final themeProvider = Provider.of<ThemeProvider>(context);
-
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: CacheHelper.getData(key: 'theme') == null

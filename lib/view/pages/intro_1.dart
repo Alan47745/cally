@@ -15,12 +15,13 @@ class FirstIntro extends StatefulWidget {
 class _FirstIntroState extends State<FirstIntro> {
   Future<void> confirmPermission() async {
     if (await Permission.contacts.request().isGranted &&
-        await Permission.phone.request().isGranted) {
+        await Permission.phone.request().isGranted &&
+        await Permission.sms.isGranted) {
       return;
     } else {
-      Permission.contacts.request().then((value) {
-        Permission.phone.request();
-      });
+      await Permission.contacts.request();
+      await Permission.phone.request();
+      await Permission.sms.request();
     }
   }
 
@@ -41,21 +42,21 @@ class _FirstIntroState extends State<FirstIntro> {
             children: [
               Image.asset('assets/img/Group 2640.png'),
               Column(
-                children: [
+                children: const [
                   Text(
                     "Call And Receive",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 28.0,
                       fontFamily: 'Poppins Regular',
                     ),
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 10.0,
                   ),
                   Text(
                     "Call and Receive to your personal\nfriends/neighbors anonymously",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14.0,
                       fontFamily: 'Poppins Regular',
@@ -86,7 +87,7 @@ class _FirstIntroState extends State<FirstIntro> {
                   ),
                   child: const Text(
                     'Start',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14.0,
                       fontFamily: 'Poppins Regular',
                     ),

@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:cally/model/cacheHelper.dart';
-import 'package:cally/utils/constant.dart';
+import 'package:cally/theme/my_theme.dart';
+import 'package:cally/view/auth/sign_user.dart';
 import 'package:cally/view/pages/home.dart';
 import 'package:cally/view/pages/intro_1.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -24,9 +26,13 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   Future<void> moveWidget() async {
     var introFinished = await CacheHelper.getData(key: 'introFinished');
-
+    var isSigned = await CacheHelper.getData(key: 'isSigned');
     if (introFinished == true) {
-      _widget = Home();
+      if (isSigned == true) {
+        _widget = Home();
+      } else {
+        _widget = SignUser();
+      }
     } else {
       _widget = FirstIntro();
     }
@@ -83,11 +89,12 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      backgroundColor: primaryPurple,
+      backgroundColor: themeProvider.isDarkMode == true
+          ? MyTheme.darkTheme.appBarTheme.backgroundColor
+          : MyTheme.lightTheme.appBarTheme.backgroundColor,
       body: Stack(
         children: [
           Column(
@@ -137,27 +144,3 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     );
   }
 }
-
-// class PageTransition extends PageRouteBuilder {
-//   final Widget page;
-//
-//   PageTransition(this.page)
-//       : super(
-//           pageBuilder: (context, animation, anotherAnimation) => page,
-//           transitionDuration: const Duration(milliseconds: 2000),
-//           transitionsBuilder: (context, animation, anotherAnimation, child) {
-//             animation = CurvedAnimation(
-//               curve: Curves.fastLinearToSlowEaseIn,
-//               parent: animation,
-//             );
-//             return Align(
-//               alignment: Alignment.bottomCenter,
-//               child: SizeTransition(
-//                 sizeFactor: animation,
-//                 child: page,
-//                 axisAlignment: 0,
-//               ),
-//             );
-//           },
-//         );
-// }

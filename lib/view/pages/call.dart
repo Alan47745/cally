@@ -1,11 +1,15 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cally/localization/localization.dart';
 import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/utils/constant.dart';
+import 'package:cally/widget/addContact.dart';
 import 'package:cally/widget/showToast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 class Call extends StatefulWidget {
   @override
@@ -17,13 +21,24 @@ class Call extends StatefulWidget {
 class _CallState extends State<Call> {
   String display = '';
   bool isAddContactsVisible = false;
+  late final AudioCache _audioCache;
 
+  @override
+  void initState() {
+    super.initState();
+    _audioCache = AudioCache(
+      prefix: 'assets/sounds/',
+      fixedPlayer: AudioPlayer()..setReleaseMode(ReleaseMode.STOP),
+    );
+  }
+
+  Phone? phone;
+  Contact? contact;
   @override
   Widget build(BuildContext context) {
     var numCon = TextEditingController(text: display);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    // List<AppContact> contacts = [];
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -46,6 +61,14 @@ class _CallState extends State<Call> {
               readOnly: true,
               showCursor: false,
               textAlign: TextAlign.center,
+              onChanged: (value) {
+                phone = Phone(value);
+                contact = Contact(
+                  displayName: 'alan',
+                  phones: [phone!],
+                  id: 'un',
+                );
+              },
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(
                   borderSide: BorderSide.none,
@@ -139,7 +162,24 @@ class _CallState extends State<Call> {
                                 borderRadius: BorderRadius.circular(50.0),
                                 customBorder: const CircleBorder(),
                                 onTap: () {
-                                  // ContactsService.openExistingContact(contact);
+                                  navigateTo(
+                                    context,
+                                    const AddContact(),
+                                  );
+                                  // FlutterContacts.insertContact(
+                                  //   Contact(
+                                  //     displayName: 'Alan',
+                                  //     phones: [
+                                  //       Phone('0933222111'),
+                                  //     ],
+                                  //     name: Name(
+                                  //       first: 'Alan',
+                                  //       last: 'Hassan',
+                                  //     ),
+                                  //   ),
+                                  // ).whenComplete(() {
+                                  //   showToast(text: 'Done');
+                                  // });
                                 },
                                 child: Icon(
                                   Icons.person_add,
@@ -199,6 +239,13 @@ class _CallState extends State<Call> {
                                 borderRadius: BorderRadius.circular(50.0),
                                 customBorder: const CircleBorder(),
                                 onLongPress: () {
+                                  if (CacheHelper.getData(
+                                          key: 'isVibrationEnabled') ==
+                                      true) {
+                                    Vibration.vibrate(
+                                      duration: 50,
+                                    );
+                                  }
                                   if (display.isNotEmpty) {
                                     setState(() {
                                       display = display.substring(
@@ -207,6 +254,13 @@ class _CallState extends State<Call> {
                                   }
                                 },
                                 onTap: () {
+                                  if (CacheHelper.getData(
+                                          key: 'isVibrationEnabled') ==
+                                      true) {
+                                    Vibration.vibrate(
+                                      duration: 50,
+                                    );
+                                  }
                                   if (display.isNotEmpty) {
                                     setState(() {
                                       display = display.substring(
@@ -261,7 +315,15 @@ class _CallState extends State<Call> {
           //   color: primaryPurple,
           // ),
         ),
-        onPressed: () {
+        onPressed: () async {
+          if (CacheHelper.getData(key: 'isSoundEnabled') == true) {
+            await _audioCache.play('key_pad_effect.mp3');
+          }
+          if (CacheHelper.getData(key: 'isVibrationEnabled') == true) {
+            Vibration.vibrate(
+              duration: 50,
+            );
+          }
           setState(() {
             display = display + number;
           });

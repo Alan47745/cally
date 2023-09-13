@@ -1,13 +1,10 @@
-import 'package:cally/main.dart';
-import 'package:cally/model/cacheHelper.dart';
-import 'package:cally/model/language.dart';
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:cally/theme/my_theme.dart';
 import 'package:cally/view/pages/drawer.dart';
 import 'package:cally/view/pages/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_zoom_drawer/config.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {

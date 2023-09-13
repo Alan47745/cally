@@ -103,23 +103,25 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
           fontFamily: themeProvider.font,
           fontSize: 16.0,
         ),
-        leading: Builder(builder: (context) {
-          return Transform(
-            alignment: Alignment.center,
-            transform: CacheHelper.getData(key: 'languageCode') == 'ar'
-                ? Matrix4.rotationY(math.pi)
-                : Matrix4.rotationY(0),
-            child: IconButton(
-              onPressed: () {
-                ZoomDrawer.of(context)?.open();
-              },
-              icon: SvgPicture.asset(
-                'assets/img/drawer.svg',
-                color: Colors.white,
+        leading: Builder(
+          builder: (context) {
+            return Transform(
+              alignment: Alignment.center,
+              transform: CacheHelper.getData(key: 'languageCode') == 'ar'
+                  ? Matrix4.rotationY(math.pi)
+                  : Matrix4.rotationY(0),
+              child: IconButton(
+                onPressed: () {
+                  ZoomDrawer.of(context)?.open();
+                },
+                icon: SvgPicture.asset(
+                  'assets/img/drawer.svg',
+                  color: Colors.white,
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          },
+        ),
       ),
       body: RefreshIndicator(
         color: primaryPurple,
@@ -146,69 +148,74 @@ class _RecentState extends State<Recent> with WidgetsBindingObserver {
               : Column(
                   children: [
                     FutureBuilder(
-                        future: logs,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            Iterable<CallLogEntry> entries =
-                                snapshot.data as Iterable<CallLogEntry>;
-                            return Expanded(
-                              child: ListView.builder(
-                                clipBehavior: Clip.none,
-                                itemBuilder: (context, index) {
-                                  final themeProvider =
-                                      Provider.of<ThemeProvider>(context);
+                      future: logs,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          Iterable<CallLogEntry> entries =
+                              snapshot.data as Iterable<CallLogEntry>;
+                          return Expanded(
+                            child: ListView.builder(
+                              clipBehavior: Clip.none,
+                              itemBuilder: (context, index) {
+                                final themeProvider =
+                                    Provider.of<ThemeProvider>(context);
 
-                                  return GestureDetector(
-                                    onTap: () {},
-                                    child: ListTile(
-                                      leading: cl.getAvatar(
-                                          entries.elementAt(index).callType!,
-                                          context),
-                                      title: cl.getTitle(
-                                          entries.elementAt(index), context),
-                                      subtitle: Text(
-                                        cl.formatDate(DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    entries
-                                                        .elementAt(index)
-                                                        .timestamp!)) +
-                                            "\n" +
-                                            cl.getTime(entries
-                                                .elementAt(index)
-                                                .duration!),
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: themeProvider.isDarkMode ==
-                                                  true
-                                              ? MyTheme.darkTheme.primaryColor
-                                              : MyTheme.lightTheme.primaryColor,
-                                        ),
-                                      ),
-                                      isThreeLine: true,
-                                      trailing: IconButton(
-                                          icon: const Icon(Icons.phone),
-                                          color: Colors.green,
-                                          onPressed: () {
-                                            cl.call(entries
-                                                .elementAt(index)
-                                                .number!);
-                                          }),
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: ListTile(
+                                    leading: cl.getAvatar(
+                                      entries.elementAt(index).callType!,
+                                      context,
                                     ),
-                                  );
-                                },
-                                itemCount: entries.length,
+                                    title: cl.getTitle(
+                                      entries.elementAt(index),
+                                      context,
+                                    ),
+                                    subtitle: Text(
+                                      cl.formatDate(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              entries
+                                                  .elementAt(index)
+                                                  .timestamp!,
+                                            ),
+                                          ) +
+                                          "\n" +
+                                          cl.getTime(
+                                            entries.elementAt(index).duration!,
+                                          ),
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: themeProvider.isDarkMode == true
+                                            ? MyTheme.darkTheme.primaryColor
+                                            : MyTheme.lightTheme.primaryColor,
+                                      ),
+                                    ),
+                                    isThreeLine: true,
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.phone),
+                                      color: Colors.green,
+                                      onPressed: () {
+                                        cl.call(
+                                            entries.elementAt(index).number!);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: entries.length,
+                            ),
+                          );
+                        } else {
+                          return const Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: primaryPurple,
                               ),
-                            );
-                          } else {
-                            return const Expanded(
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: primaryPurple,
-                                ),
-                              ),
-                            );
-                          }
-                        }),
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
         ),

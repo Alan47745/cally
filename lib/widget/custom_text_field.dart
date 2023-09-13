@@ -11,7 +11,29 @@ Widget CustomTextFormField({
   TextEditingController? controller,
   bool? filled,
   Color? fillColor,
+  Color? hintColor,
+  String? fontFamily = 'Poppins Regular',
+  Widget? label,
+  BorderRadius borderRadius = const BorderRadius.all(Radius.circular(15.0)),
+  // BorderRadius enabledBorderRadius =
+  //     const BorderRadius.all(Radius.circular(15.0)),
+  // BorderRadius focusedBorderRadius =
+  //     const BorderRadius.all(Radius.circular(15.0)),
+  // BorderRadius errorBorderRadius =
+  //     const BorderRadius.all(Radius.circular(15.0)),
+  // BorderRadius errorFocusedBorderRadius =
+  //     const BorderRadius.all(Radius.circular(15.0)),
+  // BorderRadius disabledBorderRadius =
+  //     const BorderRadius.all(Radius.circular(15.0)),
+  BorderSide enabledBorderSide = const BorderSide(color: Colors.grey),
+  BorderSide borderSide = const BorderSide(color: Colors.red),
+  BorderSide focusedBorderSide = const BorderSide(color: primaryPurple),
+  Widget? suffixIcon,
+  Widget? prefixIcon,
+  required BuildContext context,
+  TextAlign textAlign = TextAlign.center,
 }) {
+  // final themeProvider = Provider.of<ThemeProvider>(context);
   return SizedBox(
     height: 50.0,
     child: TextFormField(
@@ -19,7 +41,7 @@ Widget CustomTextFormField({
       validator: validator,
       cursorWidth: 0.5,
       cursorColor: primaryPurple,
-      textAlign: TextAlign.center,
+      textAlign: textAlign,
       textInputAction: textInputAction,
       keyboardType: keyboardType,
       style: const TextStyle(
@@ -28,6 +50,10 @@ Widget CustomTextFormField({
         fontFamily: 'Poppins Regular',
       ),
       decoration: InputDecoration(
+        
+        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
+        label: label,
         filled: filled,
         fillColor: fillColor,
         errorStyle: const TextStyle(
@@ -35,12 +61,13 @@ Widget CustomTextFormField({
           height: 0.0,
         ),
         hintText: hintText,
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           fontSize: 15.0,
-          fontFamily: 'Poppins Regular',
+          fontFamily: fontFamily,
+          color: hintColor,
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: borderRadius,
           borderSide: const BorderSide(
             color: Colors.red,
           ),
@@ -52,28 +79,22 @@ Widget CustomTextFormField({
           ),
         ),
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: borderRadius,
           borderSide: const BorderSide(
             color: Colors.grey,
           ),
         ),
         border: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.grey,
-          ),
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: borderRadius,
+          borderSide: borderSide,
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: primaryPurple,
-          ),
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: borderRadius,
+          borderSide: focusedBorderSide,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.grey,
-          ),
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: borderRadius,
+          borderSide: enabledBorderSide,
         ),
       ),
     ),

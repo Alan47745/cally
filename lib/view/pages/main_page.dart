@@ -6,14 +6,16 @@ import 'package:cally/utils/constant.dart';
 import 'package:cally/view/pages/contacts.dart';
 import 'package:cally/view/pages/call.dart';
 import 'package:cally/view/pages/home.dart';
+import 'package:cally/view/pages/messages.dart';
 import 'package:cally/view/pages/recent.dart';
-import 'package:cally/view/pages/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
   @override
   _MainPageState createState() {
     return _MainPageState();
@@ -27,9 +29,9 @@ class _MainPageState extends State<MainPage> {
   List<Widget> _buildScreens() {
     return [
       Recent(),
-      Contacts(),
+      MyContacts(),
       Call(),
-      Settings(),
+      const Scaffold(),
     ];
   }
 
@@ -83,10 +85,10 @@ class _MainPageState extends State<MainPage> {
           contentPadding: 0.0,
           icon: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.0),
-            child: Icon(CustomIcons.settings),
+            child: Icon(Icons.sms),
           ),
           title:
-              ('${AppLocalization.of(context)?.getTranslatedValue('settings')}'),
+              ('${AppLocalization.of(context)?.getTranslatedValue('messages')}'),
           textStyle: TextStyle(
             fontFamily: themeProvider.font,
           ),

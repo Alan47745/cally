@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, file_names
 
+import 'package:cally/model/statistics_data.dart';
 import 'package:cally/theme/my_theme.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:call_log/call_log.dart';
@@ -12,11 +13,17 @@ class CallLogs {
     bool? res = await FlutterPhoneDirectCaller.callNumber(text);
   }
 
+  // double outgoingCall = 0;
+  // double missedCall = 0;
+  // double rejectedCall = 0;
+  // double incomingCall = 0;
   getAvatar(CallType callType, BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     switch (callType) {
       case CallType.outgoing:
+        PieData.outgoingCall = PieData.outgoingCall! + 1;
+
         return CircleAvatar(
           maxRadius: 30,
           foregroundColor: Colors.green,
@@ -26,6 +33,8 @@ class CallLogs {
           child: const Icon(Icons.call_made_rounded),
         );
       case CallType.missed:
+        PieData.missedCall = PieData.missedCall! + 1;
+
         return CircleAvatar(
           maxRadius: 30,
           foregroundColor: Colors.blue,
@@ -35,6 +44,8 @@ class CallLogs {
           child: const Icon(Icons.call_missed),
         );
       case CallType.rejected:
+        PieData.rejectedCall = PieData.rejectedCall! + 1;
+
         return CircleAvatar(
           maxRadius: 30,
           foregroundColor: Colors.red,
@@ -44,6 +55,7 @@ class CallLogs {
           child: const Icon(Icons.call_end),
         );
       case CallType.incoming:
+        PieData.incomingCall = PieData.incomingCall! + 1;
         return CircleAvatar(
           maxRadius: 30,
           foregroundColor: Colors.black,

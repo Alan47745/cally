@@ -5,7 +5,9 @@ import 'package:cally/main.dart';
 import 'package:cally/utils/custom_icons_icons.dart';
 import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/theme/my_theme.dart';
+import 'package:cally/widget/callPadEffectsOptions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +21,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   String? languageCode;
   String? countryCode;
-
+  Contact contact = Contact();
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -364,6 +366,43 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
             ),
+            Divider(
+              color: themeProvider.isDarkMode == true
+                  ? MyTheme.darkTheme.cardColor
+                  : MyTheme.lightTheme.cardColor,
+              indent: 30.0,
+              endIndent: 30.0,
+            ),
+            MaterialButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const CallPadEffectsOptions();
+                  },
+                );
+              },
+              child: ListTile(
+                title: Text(
+                  'Call Pad Effects',
+                  style: TextStyle(
+                    color: themeProvider.isDarkMode == true
+                        ? MyTheme.darkTheme.primaryColor
+                        : MyTheme.lightTheme.primaryColor,
+                    fontSize: 16.0,
+                    fontFamily: themeProvider.font,
+                  ),
+                ),
+                leading: Icon(
+                  Icons.settings_remote,
+                  color: themeProvider.isDarkMode == true
+                      ? MyTheme.darkTheme.primaryColor
+                      : MyTheme.lightTheme.primaryColor,
+                  size: 23.0,
+                ),
+              ),
+            ),
+
             // Divider(
             //   color: themeProvider.isDarkMode == true
             //       ? MyTheme.darkTheme.cardColor

@@ -1,9 +1,6 @@
-import 'package:cally/main.dart';
 import 'package:cally/model/cacheHelper.dart';
 import 'package:cally/utils/constant.dart';
-import 'package:cally/view/pages/home.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode themeMode = CacheHelper.getData(key: 'theme') == true
@@ -35,8 +32,8 @@ class ThemeProvider extends ChangeNotifier {
 
 class MyTheme {
   static final darkTheme = ThemeData(
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.deepPurple[700],
+    appBarTheme: const AppBarTheme(
+      backgroundColor: primaryPurple,
     ),
     scaffoldBackgroundColor: Colors.grey[900],
     colorScheme: const ColorScheme.dark(),
@@ -51,8 +48,8 @@ class MyTheme {
   );
 
   static final lightTheme = ThemeData(
-    appBarTheme: const AppBarTheme(
-      backgroundColor: primaryPurple,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.deepPurple[700],
     ),
     scaffoldBackgroundColor: Colors.white,
     colorScheme: const ColorScheme.light(),
